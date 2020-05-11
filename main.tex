@@ -31,66 +31,49 @@ satisfying the arc capacity constraints.
 
 
 \section{Modello matematico}
-Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multicommodity Flow adattandolo al nostro caso nel quale i flussi vanno distinti in base al tipo di instradamento ferroviario o stradale. Inoltre per soddisfare l'unicità dei cammini abbiamo aggiunto un vincolo \eqref{mod:v8} in cui imponiamo che dato un ordine, ogni nodo appartenente a quel cammino possa avere al più un arco uscente.
+Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multicommodity Flow adattandolo al nostro caso  ed assumendo che dato un arco esso possa essere o solo di tipo stradale o solo di tipo ferroviario. Inoltre per soddisfare l'unicità dei cammini abbiamo aggiunto un vincolo \eqref{mod:v6} in cui imponiamo che dato un ordine, ogni nodo appartenente a quel cammino possa avere al più un arco uscente.
 \subsection{Parametri}
 \begin{itemize}
     \item \textbf{$N$} è l'insieme dei nodi.
-    \item \textbf{$A_f$} è l'insieme degli archi ferroviari.
-    \item \textbf{$A_s$} è l'insieme degli archi stradali.
-    \item \textbf{$H$} è l'insieme delle degli ordini
-    \item $u_{s_{ij}}$ capacità delle strada $(i,j) > 0$ ; $=0$ se $(i,j) \not\in A_s $ 
-    \item $u_{f_{ij}}$ capacità delle ferrovia $(i,j) > 0$ ; $=0$ se $(i,j) \not\in A_f $ 
-    \item $c_{s_{ij}}$ costo delle strada $(i,j)$
-    \item $c_{f_{ij}}$ costo delle ferrovia $(i,j)$
+    \item \textbf{$A$} è l'insieme degli archi.
+    \item \textbf{$H$} è l'insieme degli ordini
+    \item $u_{ij}$ capacità del collegamento $(i,j) > 0$ 
+    \item $c_{ij}$ costo del collegamento $(i,j)$
     \item $d_h$ quantita' merce relativa ad ordine $h$
 \end{itemize}
 
-\begin{itemize}
-    \item $b_i^h = 0$ se $i$ è un nodo di trasporto per ordine $h$
-    \item  $b_i^h =-1$ se $i$ è un nodo origine per ordine $h$
-    \item $b_i^h =1$ se $i$ è un nodo destinazione per ordine $h$
-\end{itemize}
+% \begin{itemize}
+%     \item $b_i^h = 0$ se $i$ per gli altri $h$
+%     \item  $b_i^h =-1$ se $i$ è un nodo origine per ordine $h$
+%     \item $b_i^h =1$ se $i$ è un nodo destinazione per ordine $h$
+% \end{itemize}
 
 \subsection{Variabili Decisionali}
 \begin{itemize}
-    \item $y_{s_{ij}}^h$ $\in \{0,1\}$ arco di attivazione del collegamento stradale $(i,j)$ relativa all'ordine h
-    \item $y_{f_{ij}}^h$ $\in \{0,1\}$ arco di attivazione del collegamento ferroviario $(i,j)$ relativa all'ordine h
+    \item $y_{ij}^h$ $\in \{0,1\}$ arco di attivazione del collegamento stradale $(i,j)$ relativa all'ordine h
 \end{itemize}
 
 \subsection{Modello}
 
 \label{problem1}
 \begin{align}
-    min (\sum_{(i,j) \in A_f}\sum_{h=1}^H c_{f_{ij}}^h \cdot y_{s_{ij}}^h) +
-    (\sum_{(i,j) \in A_s}\sum_{h=1}^H c_{s_{ij}}^h \cdot y_{f_{ij}}^h)
+    min (\sum_{(i,j) \in A}\sum_{h=1}^H c_{ij} \cdot y_{ij}^h)
     \label{mod:obj}
     \\
     (\sum_{j}y_{ji}^h)- (\sum_{j}y_{ij}^h ) = b_i^h, \; \; \forall i \in N, h=1, ... H
     \label{mod:v2}
     \\
-    d^h \leq u_{f_{ij}} \cdot y_{f_{ij}}^h, \; \; \forall (i,j) \in A_f
+    \sum_{(h=1)}^H y_{ij}^h \cdot d^h \leq u_{ij}, \; \; \forall (i,j) \in A
     \label{mod:v3}
     \\
-    d^h \leq u_{s_{ij}} \cdot y_{s_{ij}}^h, \; \; \forall (i,j) \in A_s
+    \sum_{(i,j)} y_{ij}^h  \leq K, \; \; h=1, ... H
     \label{mod:v4}
     \\
-    \sum_{(h=1)}^H y_{f_{ij}}^h \cdot d^h \leq u_{f_{ij}}, \; \; \forall (i,j) \in A_f
+    \sum_{j} y_{ij}^h \leq 1, \; \; \forall i \in \textit{N} , h=1, ... H
     \label{mod:v5}
     \\
-    \sum_{(h=1)}^H y_{s_{ij}}^h \cdot d^h \leq u_{s_{ij}}, \; \; \forall (i,j) \in A_s
+     y_{ij}^h \in \{0,1\}, \; \; \forall (i,j) \in A, h=1, ... H
     \label{mod:v6}
-    \\
-    \sum_{(i,j)} y_{f_{ij}}^h + y_{s_{ij}}^h \leq K, \; \; h=1, ... H
-    \label{mod:v7}
-    \\
-    \sum_{j} y_{f_{ij}}^h + y_{s_{ij}}^h \leq 1, \; \; \forall i \in \textit{N} , h=1, ... H
-    \label{mod:v8}
-    \\
-     y_{f_{ij}}^h \in \{0,1\}, \; \; \forall (i,j) \in A_f, h=1, ... H
-    \label{mod:v9}
-    \\
-    y_{s_{ij}}^h \in \{0,1\}, \; \; \forall (i,j) \in A_s, h=1, ... H
-    \label{mod:v10}
 \end{align}
 
 
@@ -101,11 +84,19 @@ Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multic
     \item In \eqref{mod:obj} è presentata la funzione obiettivo. Questa consiste nella minimizzazione, per ogni ordine $h$, del costo di instradare la merce lungo una tratta composta possibilmente da ferrovie e/o strade.
     
     \item In \eqref{mod:v2} è presentato il vincolo di bilancio di flusso per ogni ordine $h \in H$.
-    \item Le disequazioni \eqref{mod:v3} ed \eqref{mod:v4} rappresentano i vincoli di attivazione degli archi.
-    \item Le disequazioni \eqref{mod:v5} ed \eqref{mod:v6} rappresentano i vincoli sulla capacita' degli archi.
-    \item La disequazione \eqref{mod:v7} modella il vincolo di lunghezza massima del cammino $\leq K$.
-    \item Infine, la disequazione \eqref{mod:v8} modella il vincolo di unicita' del cammino per ogni commodity.
-    \item In \eqref{mod:v9} e \eqref{mod:v10} sono invece presenti i vincoli di interezza per le attivazioni degli archi.
+    \begin{equation*}
+    b_i =
+    \begin{cases}
+      -1, i = origine \\
+      1, i = destinazione \\
+      0, altrimenti
+    \end{cases}
+    \end{equation*}
+
+    \item Le disequazioni \eqref{mod:v3} rappresenta i vincoli sulla capacita' degli archi.
+    \item La disequazione \eqref{mod:v4} modella il vincolo di lunghezza massima del cammino $\leq K$.
+    \item Infine, la disequazione \eqref{mod:v5} modella il vincolo di unicita' del cammino per ogni commodity.
+    \item In \eqref{mod:v6} \`e invece presente il vincolo di interezza per le attivazioni degli archi.
 
 \end{itemize}
 
