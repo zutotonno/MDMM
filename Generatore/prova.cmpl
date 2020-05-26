@@ -1,0 +1,19 @@
+%arg -ignoreZeros
+parameters:
+K :=3;
+ORDERS := 1(1)2;
+NODES := 1(1)4;
+EDGES := 1(1)2;
+d[ORDERS] := (26, 37);
+c[NODES,NODES,EDGES] := (((0, 0), (70, 0), (73, 9), (66, 46)), ((70, 0), (0, 0), (58, 0), (90, 49)), ((82, 1), (95, 0), (0, 0), (53, 0)), ((69, 26), (72, 30), (54, 0), (0, 0)));
+u[NODES,NODES,EDGES] := (((0, 0), (92, 0), (83, 21), (91, 46)), ((52, 0), (0, 0), (73, 0), (53, 28)), ((87, 43), (80, 0), (0, 0), (77, 0)), ((91, 26), (74, 29), (52, 0), (0, 0)));
+b[NODES,ORDERS] := ((1, 1), (0, 0), (-1, 0), (0, -1));
+variables:
+y[NODES,NODES,ORDERS,EDGES]: integer[0..1];
+objectives:
+cost: sum{ i in NODES , j in NODES, e in EDGES, h in ORDERS : c[i,j,e] * y[i,j,h,e] } -> min;
+constraints:
+bilancio  { i in NODES,  h in ORDERS: sum{ j in NODES, e in EDGES : y[j,i,h,e] } - sum{ j in NODES, e in EDGES : y[i,j,h,e] } = b[i,h]; }
+capacity { i in NODES , j in NODES, e in EDGES : sum{ h in ORDERS : y[i,j,h,e] * d[h] } <= u[i,j,e]; }
+lunghezza { h in ORDERS, e in EDGES : sum {i in NODES, j in NODES : y[i,j,h,e]} <= K ; }
+unico {i in NODES,  h in ORDERS, e in EDGES: sum {j in NODES: y[i,j,h,e]} <= 1; }
