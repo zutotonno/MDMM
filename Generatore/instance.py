@@ -11,8 +11,11 @@ def instance_generator(k=3, Orders=2, Nodes=4,min_demand=10, max_demand=50, min_
                                                 perc_att_ferrovie=0.6, min_dist_ferrovie=1,file_name='prova.cmpl'):
 
     s = "%arg -ignoreZeros"
+    t = "%arg -solver glpk"
     with open(file_name, mode='w+') as myfile:
         myfile.write(s+'\n')
+    with open(file_name, mode='a+') as myfile:
+        myfile.write(t+'\n')
     with open(file_name, mode='a+') as myfile:
         myfile.write("parameters:"+'\n')
 
@@ -31,15 +34,20 @@ def instance_generator(k=3, Orders=2, Nodes=4,min_demand=10, max_demand=50, min_
         capacities.append([[random.randint(min_cap_strade, max_cap_strade)] if (i!=j) else [0] for j in range(Nodes)])
         costs.append([[random.randint(min_costs_strade, max_costs_strade)*abs(i-j)] if i!=j else [0] for j in range(Nodes)])
 
+    num_ferr = 0
     ## Installiamo alcune ferrovie
     for i in range(Nodes):
         for j in range(Nodes):
             att_ferrovia = random.uniform(0,1)<perc_att_ferrovie and abs(i-j)>min_dist_ferrovie
+            if(att_ferrovia):
+                num_ferr+=1
             capacities[i][j].append(random.randint(min_cap_ferrovie, max_cap_ferrovie) if (att_ferrovia) else 0)
             capacities[i][j] = tuple(capacities[i][j])
 
             costs[i][j].append(random.randint(min_costs_ferrovie, max_costs_ferrovie) if (att_ferrovia) else 0)
             costs[i][j] = tuple(costs[i][j])
+            
+    print(num_ferr)
 
     capacities = tuple(tuple(x) for x in capacities)
     costs = tuple(tuple(x) for x in costs)
