@@ -30,11 +30,13 @@ def generator(num_instances,perc_att_ferrovie):
 
         Orders = gen_Order(n)
 
-        min_cap_strade = int((min_demand+max_demand)/2)#gen_CapStrada(min_demand,Orders)
-        max_cap_strade = max_demand
+        min_cap_ferrovie = max_demand
+        max_cap_ferrovie = int(max_demand*1.5)
+        
+        min_cap_strade = max_cap_ferrovie+1#gen_CapStrada(min_demand,Orders)
+        max_cap_strade = min_cap_strade * 2
 
-        min_cap_ferrovie = min_demand
-        max_cap_ferrovie = min_cap_strade -1
+        
 
         min_dist_ferrovie = gen_mDistFerrovie(n)
 
@@ -51,7 +53,7 @@ def generator(num_instances,perc_att_ferrovie):
 
 
 if __name__ == "__main__":
-    num_instances = [10,50]
+    num_instances = [10,50,100]
     ## Topologia del grafo
     perc_att_ferrovie = 0.9 #OK
 

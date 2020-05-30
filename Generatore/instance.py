@@ -20,9 +20,9 @@ def instance_generator(Orders=2, Nodes=4,min_demand=10, max_demand=50, min_cap_s
 
     for i in range(capacities.shape[0]):
         for j in range(capacities.shape[1]):
-            att_strade = i!=j and random.uniform(0,1)<0.9
-            capacities[i,j,0] = int(lognorm.rvs(2.5,size=1)[0])+max_cap_strade if att_strade else 0
-            costs[i,j,0] = (int(lognorm.rvs(1.25,size=1)[0])+min_costs_strade)*abs(i-j) if att_strade else 0
+            att_strade = i!=j
+            capacities[i,j,0] = random.randint(max_demand, max_cap_strade) if att_strade else 0
+            costs[i,j,0] = random.randint(min_costs_strade, max_costs_strade)*abs(i-j) if att_strade else 0
 
     num_ferr = 0
     # Installiamo alcune ferrovie
@@ -38,10 +38,10 @@ def instance_generator(Orders=2, Nodes=4,min_demand=10, max_demand=50, min_cap_s
             att_ferrovia = random.uniform(0,1)<(abs(i-j)/(Nodes-1)*perc_att_ferrovie)
             if(att_ferrovia):
                 num_ferr+=1
-            capacities[i,j,1] = (int(norm.rvs(1,size=1)[0])+max_cap_ferrovie if (att_ferrovia) else 0)
+            capacities[i,j,1] = random.randint(min_cap_ferrovie, max_cap_ferrovie) if (att_ferrovia) else 0
             #capacities[i,j] = tuple(capacities[i,j])
 
-            costs[i,j,1] = (int(lognorm.rvs(1.25,size=1)[0])+min_costs_ferrovie if (att_ferrovia) else 0)
+            costs[i,j,1] = random.randint(min_costs_ferrovie, max_costs_ferrovie)*abs(i-j) if (att_ferrovia) else 0
             #costs[i,j] = tuple(costs[i,j])
             fn='),'
             if j==Nodes-1:
@@ -106,32 +106,8 @@ def instance_generator(Orders=2, Nodes=4,min_demand=10, max_demand=50, min_cap_s
         "objectives:","cost: sum{ h in ORDERS, i in NODES , j in NODES, e in EDGES : c[i,j,e] * y[h,i,j,e] } -> min;",
         "constraints:","bilancio  { i in NODES,  h in ORDERS: sum{ j in NODES, e in EDGES : y[h,j,i,e] } - sum{ j in NODES, e in EDGES : y[h,i,j,e] } = b[i,h]; }",
         "capacity { i in NODES , j in NODES, e in EDGES : sum{ h in ORDERS : y[h,i,j,e] * d[h] } <= u[i,j,e]; }",
-        "lunghezza { h in ORDERS, e in EDGES : sum {i in NODES, j in NODES : y[h,i,j,e]} <= K ; }",
+        "lunghezza { h in ORDERS : sum {i in NODES, j in NODES, e in EDGES : y[h,i,j,e]} <= K ; }",
         "unico {h in ORDERS, i in NODES, e in EDGES: sum {j in NODES: y[h,i,j,e]} <= 1; }"]
         with open(file_name, mode='a+') as myfile:
             for item in final_string:
                 myfile.write(item+'\n')
-
-
-if __name__ == "__main__":
-    k = int(sys.argv[1])
-    Orders = int(sys.argv[2])
-    Nodes = int(sys.argv[3])
-    min_demand = int(sys.argv[4])
-    max_demand = int(sys.argv[5])
-    min_cap_strade = int(sys.argv[6])
-    max_cap_strade = int(sys.argv[7])
-    min_costs_strade = int(sys.argv[8])
-    max_costs_strade = int(sys.argv[9])
-
-    min_cap_ferrovie = int(sys.argv[10])
-    max_cap_ferrovie = int(sys.argv[11])
-    min_costs_ferrovie = int(sys.argv[12])
-    max_costs_ferrovie = int(sys.argv[13])
-    perc_att_ferrovie = float(sys.argv[14])
-    min_dist_ferrovie = float(sys.argv[15])
-    file_name = sys.argv[16]
-
-
-    instance_generator(k,Orders, Nodes,min_demand, max_demand,min_cap_strade,max_cap_strade,min_costs_strade,max_costs_strade,
-    min_cap_ferrovie,max_cap_ferrovie,min_costs_ferrovie,max_costs_ferrovie,perc_att_ferrovie,min_dist_ferrovie,file_name )
