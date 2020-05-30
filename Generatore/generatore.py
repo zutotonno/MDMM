@@ -50,7 +50,7 @@ def generator(num_instances,min_demand, max_demand, min_costs_strade, max_costs_
 if __name__ == "__main__":
     num_instances = 1
     ## Topologia del grafo
-    perc_att_ferrovie = 0.1 #OK
+    perc_att_ferrovie = 0.9 #OK
 
     ## Demand
     min_demand = 50 #OK
