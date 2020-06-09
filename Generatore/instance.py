@@ -1,17 +1,15 @@
 import numpy as np
 import sys
 import random
-from scipy.stats import norm, lognorm
 
 
 def instance_generator(Orders=2, Nodes=4,min_demand=10, max_demand=50, min_cap_strade=50, max_cap_strade=100, min_costs_strade=50, max_costs_strade=100,
                                                 min_cap_ferrovie=1,max_cap_ferrovie=49,min_costs_ferrovie=1,max_costs_ferrovie=49,
-                                                perc_att_ferrovie=0.6, min_dist_ferrovie=1,_file_name='prova.cmpl'):
+                                                perc_att_ferrovie=0.6,_file_name='prova.cmpl'):
 
 
 
     d_Orders = [random.randint(min_demand, max_demand) for i in range(Orders)]
-    #d_Orders = [int(norm.rvs(1.5,size=1)[0])+min_demand for i in range(Orders)]
 
 
     ## Strade : percentuale attivazione alta e capacita alta, ferrovie il contrario. Strade lontane costano tanto
