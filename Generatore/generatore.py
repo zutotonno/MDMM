@@ -55,7 +55,7 @@ def generator(num_instances,perc_att_ferrovie):
 if __name__ == "__main__":
     num_instances = [10,50,100]
     ## Topologia del grafo
-    perc_att_ferrovie = 0.9 #OK
+    perc_att_ferrovie = 0.5 #OK
 
 
 
