@@ -51,7 +51,7 @@ Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multic
 
 \subsection{Variabili Decisionali}
 \begin{itemize}
-    \item $y_{ij}^h$ $\in \{0,1\}$ arco di attivazione del collegamento stradale $(i,j)$ relativa all'ordine h
+    \item $y_{ij}^h$ $\in \{0,1\}$ arco di attivazione del collegamento $(i,j)$ relativa all'ordine h
 \end{itemize}
 
 \subsection{Modello}
@@ -101,21 +101,31 @@ Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multic
 
 \end{itemize}
 
-% Please add the following required packages to your document preamble:
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-\begin{table}[]
-\begin{tabular}{llll
->{\columncolor[HTML]{C6EFCE}}l 
->{\columncolor[HTML]{FFEB9C}}l 
->{\columncolor[HTML]{FFEB9C}}l 
->{\columncolor[HTML]{FFEB9C}}l }
-Nodi & PercFerr & K & Norder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Costo} & {\color[HTML]{9C6500} Tempo} & {\color[HTML]{9C6500} Mem} \\
-10 & 0,1 & 1 & 1 & {\color[HTML]{006100} 1} & {\color[HTML]{9C6500} 1} & {\color[HTML]{9C6500} 1} & {\color[HTML]{9C6500} 1} \\
-10 & 0,1 & 2 & 1 & {\color[HTML]{006100} 1} & {\color[HTML]{9C6500} 1} & {\color[HTML]{9C6500} 1} & {\color[HTML]{9C6500} 1} \\
-10 & 0,1 & 3 & 1 & {\color[HTML]{006100} 1} & {\color[HTML]{9C6500} 1} & {\color[HTML]{9C6500} 1} & {\color[HTML]{9C6500} 1}
-\end{tabular}
-\end{table}
+
+\section{Generatore di istanze}
+\subsection{Dettagli implementativi}
+Per ottenere le istanze del problema abbiamo deciso di implementare, utilizzando il linguaggio python, un generatore di file .cmpl che tenesse conto delle specifiche del problema per generare delle istanze realistiche. Il problema richiede infatti, che le strade colleghino ogni coppia di nodi e che le ferrovie siano presenti solo sui collegamenti "lunghi". Il nostro generatore, data una coppia $(i,j)$ crea un arco ferroviario tra $i$ e $j$ solo quando la seguente condizione è verificata:
+\begin{align}
+random.uniform[0,1] < \frac{|i -j|}{Nodes-1}\cdot perc\_att\_ferrovie
+\end{align}
+Dove, Nodes è il numero di nodi e $perc\_att\_ferrovie$ è un parametro scelto dall'utente in fase di creazione dell'istanza e compreso tra 0 ed 1. In questo modo, la probabilità che venga a crearsi un collegamento ferroviario tra $i$ e $j$ è tanto più alta quanto più i due nodi sono lontani. La probabilità è uguale ad 1 quando i due nodi sono il primo (1) e l'ultimo (Nodes). L'utente tramite il paramentro $perc\_att\_ferrovie$ è in grado di controllare ulteriormente il numero di ferrovie che possono venire a crearsi. 
+\\
+Il nostro generatore, genera quindi per ogni coppia di nodi una strada e con probabilità variabile una ferrovia. Per scoraggiare l'utilizzo indiscriminato di strade su collegamenti lunghi (visto che le specifiche del problema indicavano che ogni coppia di nodi dovesse essere collegata almeno da una strada), abbiamo moltiplicato il costo del collegamento (stradale o ferroviario) per $|i-j|$ così che utilizzare più collegamenti, ma corti, abbia un costo generalmente inferiore.
+\\
+Visto che le specifiche richiedevano che i costi e le capacità delle ferrovie fossero minori delle strade, il generatore di istanze genera i costi e le capacità in maniera randomica ma all'interno di intervalli predefiniti, così da impedire che esista un collegamento stradale tra due nodi con un costo (capacità) minore della corrispettiva ferrovia (se creata).
+\\
+Altro parametro a cui abbiamo fatto attenzione è $K$ ossia il numero massimo di collegamenti servibili in un solo percorso. Nel nostro generatore $K$ è generato 4 volte per ogni istanza tenendo conto del numero di nodi e facendo in modo di avere $K$ crescenti a partire da valori bassi sino a valori leggermente più alti. In questo modo abbiamo potuto osservare come per una stessa istanza, $K$ influezzasse il risultato in termini di costo minimo e costo computazionale.
+\\
+Infine, il numero di ordini $H$ è generato come : $\frac{Nodes}{2}$
+\subsection{Come avviare il generatore}
+La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata.
+\\
+Per generare una sequenza di istanze .cmpl basta lanciare lo script generator.py con i seguenti parametri:
+
+\begin{itemize}
+    \item -nodes : Numero di nodi della rete, default [10,50,100]
+    \item -patt : percentuale di attivazione delle ferrovie, default 0.9
+\end{itemize}
 
 \end{document}
 
