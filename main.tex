@@ -103,7 +103,9 @@ Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multic
 
 
 \section{Generatore di istanze}
-\subsection{Dettagli implementativi}
+La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata. Generando direttamente il file .cmpl per ogni istanza del problema, con annesso modello matematico. Ogni istanze generata è infatti pronta per essere data in pasto ad un solutore che accetti istanze in formato .cmpl. I nostri test presentati nel paragrafo successivo sono stati effettuati utilizzando i solver $glpk$ e $cbc$. In questa sezione ci proponiamo di svolgere, quindi, i punti 2 e 3 del progetto.
+
+\subsection{Istance.py}
 Per ottenere le istanze del problema abbiamo deciso di implementare, utilizzando il linguaggio python, un generatore di file .cmpl che tenesse conto delle specifiche del problema per generare delle istanze realistiche. Il problema richiede infatti, che le strade colleghino ogni coppia di nodi e che le ferrovie siano presenti solo sui collegamenti "lunghi". Il nostro generatore, data una coppia $(i,j)$ crea un arco ferroviario tra $i$ e $j$ solo quando la seguente condizione è verificata:
 \begin{align}
 random.uniform[0,1] < \frac{|i -j|}{Nodes-1}\cdot perc\_att\_ferrovie
@@ -114,18 +116,159 @@ Il nostro generatore, genera quindi per ogni coppia di nodi una strada e con pro
 \\
 Visto che le specifiche richiedevano che i costi e le capacità delle ferrovie fossero minori delle strade, il generatore di istanze genera i costi e le capacità in maniera randomica ma all'interno di intervalli predefiniti, così da impedire che esista un collegamento stradale tra due nodi con un costo (capacità) minore della corrispettiva ferrovia (se creata).
 \\
-Altro parametro a cui abbiamo fatto attenzione è $K$ ossia il numero massimo di collegamenti servibili in un solo percorso. Nel nostro generatore $K$ è generato 4 volte per ogni istanza tenendo conto del numero di nodi e facendo in modo di avere $K$ crescenti a partire da valori bassi sino a valori leggermente più alti. In questo modo abbiamo potuto osservare come per una stessa istanza, $K$ influezzasse il risultato in termini di costo minimo e costo computazionale.
+Altro parametro a cui abbiamo fatto attenzione è $K$ ossia il numero massimo di collegamenti servibili in un solo percorso. Nel nostro generatore $K$ è generato 4 volte per ogni istanza tenendo conto del numero di nodi e facendo in modo di avere $K$ crescenti a partire da valori bassi sino a valori leggermente più alti. In questo modo abbiamo potuto osservare come per una stessa istanza, $K$ influezzasse il risultato in termini di costo minimo e tempo di esecuzione.
 \\
 Infine, il numero di ordini $H$ è generato come : $\frac{Nodes}{2}$
-\subsection{Come avviare il generatore}
-La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata.
-\\
+
+\subsection{Generator.py}
 Per generare una sequenza di istanze .cmpl basta lanciare lo script generator.py con i seguenti parametri:
 
 \begin{itemize}
     \item -nodes : Numero di nodi della rete, default [10,50,100]
     \item -patt : percentuale di attivazione delle ferrovie, default 0.9
 \end{itemize}
+Non viene esposto all'utente la possibilità di cambiare i costi e e le capacità minime e massime, così come la demand. Dopo alcuni tests ci è sembrato ragionevole utilizzare i seguenti valori di min e max come range per la generazione di valori random:
+\begin{itemize}
+    \item min\_demand : 50
+    \item max\_demand : 100
+    \item min\_costs\_strade : 50
+    \item max\_costs\_strade : 75
+    \item min\_costs\_ferrovie : 25
+    \item max\_costs\_ferrovie : 45
+\end{itemize}
+
+Riguardo le capacità delle ferrovie abbiamo scelto di utilizzare il valore $max\_demand$ come \textbf{capacità minima ferroviaria} (così da non rischiare la creazione di ferrovie potenzialmente non utilizzabili per nessun ordine), mentre per la \textbf{capacità massima ferroviaria} abbiamo moltiplicato la capacità minima per $1.5$. Riguardo le strade, la \textbf{capacità minima stradale} è ottenuta sommando $1$ alla capacità massima delle ferrovie, mentre la \textbf{capacità massima stradale} è ottenuta raddoppiando la capacità minima.
+
+\section{Soluzioni e performances}
+Per testare come il generatore creasse istanze effettivamente più difficili da risolvere al variare dei parametri esposti all'utente, abbiamo lanciato una serie di esperimenti con i due solver : $cbc$ e $glpk$ ed usando i seguenti parametri del generatore:
+\begin{itemize}
+    \item Numero di nodi : 10, 50, 100
+    \item Percentuale di attivazione delle ferrovie : 0.1, 0.5, 0.9
+    \item K : variabile tra 1 e 25 in base al numero dei nodi, ma comunque usando 3 o 4 diversi K per ogni configurazione.
+\end{itemize}
+In totale abbiamo generato 66 istanze .cmpl i cui risultati (completi) sono mostrati in \cref{appendice}. In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 100 minuti e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
+\begin{itemize}
+    \item S.O. : Windows 10
+    \item Processore : intel core i7-7700HQ 4 core (8 Threads)
+    \item Ram : 16gb ddr4
+    \item S.video : gtx 1060m
+\end{itemize}
+La percentuale di attivazione delle ferrovie influenza molto la facilità con la quale è trovata la soluzione ottima. Con 100 nodi e percentuale di attivazione $= 0.1$ come visibile in \cref{tab:perc01}, nessuno dei due solvers riesce a trovare la soluzione ottima in un tempo ragionevole tranne che per il caso con $k = 2$ e come solver $glpk$, questo perchè un K così basso rispetto al numero di possibili collegamenti riduce di molto lo spazio di ricerca. Con una percentuale di attivazione delle ferrovie $= 0.5$ e $=0.9$ le istanze da 100 nodi, vengono invece solo risolte da $glpk$ come visibile in \cref{tab:perc05} e \cref{tab:perc09} e con tempi generalmente inferiori.
+Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima per la generazione dei nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
+
+
+\section{Appendice}
+\label{appendice}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[htb]
+\begin{tabular}{|l|l|l|l|
+>{\columncolor[HTML]{C6EFCE}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |}
+\hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} MinCost} & {\color[HTML]{9C6500} Time} \\ \hline
+10 & 0.1 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.1 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0,08s} \\ \hline
+10 & 0.1 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.1 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0,1s} \\ \hline
+10 & 0.1 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.1 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1,73s} \\ \hline
+50 & 0.1 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17,2s} \\ \hline
+50 & 0.1 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 35s} \\ \hline
+50 & 0.1 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 6,9s} \\ \hline
+50 & 0.1 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 41s} \\ \hline
+50 & 0.1 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,5s} \\ \hline
+50 & 0.1 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} \\ \hline
+50 & 0.1 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,1s} \\ \hline
+50 & 0.1 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} \\ \hline
+100 & 0.1 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 59549} & {\color[HTML]{9C6500} 735s} \\ \hline
+100 & 0.1 & 2 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.1 & 7 & 50 & {\color[HTML]{006100} glpk} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.1 & 7 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.1 & 12 & 50 & {\color[HTML]{006100} glpk} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.1 & 12 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.1 & 25 & 50 & {\color[HTML]{006100} glpk} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.1 & 25 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+\end{tabular}
+\caption{\label{tab:perc01} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.1$}
+\end{table}
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|
+>{\columncolor[HTML]{C6EFCE}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |}
+\hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} MinCost} & {\color[HTML]{9C6500} Time} \\ \hline
+10 & 0.5 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.5 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0,12s} \\ \hline
+10 & 0.5 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.5 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 1s} \\ \hline
+10 & 0.5 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.5 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0,13s} \\ \hline
+50 & 0.5 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 9s} \\ \hline
+50 & 0.5 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 35s} \\ \hline
+50 & 0.5 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 77s} \\ \hline
+50 & 0.5 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 40s} \\ \hline
+50 & 0.5 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 39s} \\ \hline
+50 & 0.5 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 37s} \\ \hline
+50 & 0.5 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} \\ \hline
+50 & 0.5 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} \\ \hline
+100 & 0.5 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 56257} & {\color[HTML]{9C6500} 198s} \\ \hline
+100 & 0.5 & 2 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.5 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52391} & {\color[HTML]{9C6500} 3066s} \\ \hline
+100 & 0.5 & 7 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.5 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52391} & {\color[HTML]{9C6500} 2852s} \\ \hline
+100 & 0.5 & 12 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.5 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52391} & {\color[HTML]{9C6500} 2636s} \\ \hline
+100 & 0.5 & 25 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+\end{tabular}
+\caption{\label{tab:perc05} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.5$}
+\end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|
+>{\columncolor[HTML]{C6EFCE}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |}
+\hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} MinCost} & {\color[HTML]{9C6500} Time} \\ \hline
+10 & 0.9 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.9 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0,11s} \\ \hline
+10 & 0.9 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.9 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} \\ \hline
+10 & 0.9 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} \\ \hline
+10 & 0.9 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} \\ \hline
+50 & 0.9 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 6s} \\ \hline
+50 & 0.9 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 24,12s} \\ \hline
+50 & 0.9 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 9s} \\ \hline
+50 & 0.9 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 28,64s} \\ \hline
+50 & 0.9 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} \\ \hline
+50 & 0.9 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 28,97s} \\ \hline
+50 & 0.9 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} \\ \hline
+50 & 0.9 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 31s} \\ \hline
+100 & 0.9 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 49034} & {\color[HTML]{9C6500} 524s} \\ \hline
+100 & 0.9 & 2 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.9 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45577} & {\color[HTML]{9C6500} 5856s} \\ \hline
+100 & 0.9 & 7 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.9 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45577} & {\color[HTML]{9C6500} 4502s} \\ \hline
+100 & 0.9 & 12 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45577} & {\color[HTML]{9C6500} 4200s} \\ \hline
+100 & 0.9 & 25 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+\end{tabular}
+\caption{\label{tab:perc09} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.9$}
+\end{table}
+
 
 \end{document}
 
