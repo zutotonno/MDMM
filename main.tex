@@ -8,6 +8,9 @@
 \usepackage{graphicx}
 \usepackage{amsfonts} 
 \usepackage[table,xcdraw]{xcolor}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \title{MDMM Project}
 \author{Matino Ruben \\ Ritacco Antonio }
 \date{June 2020}
@@ -103,7 +106,7 @@ Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multic
 
 
 \section{Generatore di istanze}
-La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata. Generando direttamente il file .cmpl per ogni istanza del problema, con annesso modello matematico. Ogni istanze generata è infatti pronta per essere data in pasto ad un solutore che accetti istanze in formato .cmpl. I nostri test presentati nel paragrafo successivo sono stati effettuati utilizzando i solver $glpk$ e $cbc$. In questa sezione ci proponiamo di svolgere, quindi, i punti 2 e 3 del progetto.
+La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata generando direttamente il file .cmpl per ogni istanza del problema, con annesso modello matematico. Ogni istanze generata è infatti pronta per essere data in pasto ad un solutore che accetti istanze in formato .cmpl. I nostri test presentati nel paragrafo successivo sono stati effettuati utilizzando i solver $glpk$ e $cbc$. In questa sezione ci proponiamo di svolgere, quindi, i punti 2 e 3 del progetto.
 
 \subsection{Istance.py}
 Per ottenere le istanze del problema abbiamo deciso di implementare, utilizzando il linguaggio python, un generatore di file .cmpl che tenesse conto delle specifiche del problema per generare delle istanze realistiche. Il problema richiede infatti, che le strade colleghino ogni coppia di nodi e che le ferrovie siano presenti solo sui collegamenti "lunghi". Il nostro generatore, data una coppia $(i,j)$ crea un arco ferroviario tra $i$ e $j$ solo quando la seguente condizione è verificata:
@@ -112,13 +115,13 @@ random.uniform[0,1] < \frac{|i -j|}{Nodes-1}\cdot perc\_att\_ferrovie
 \end{align}
 Dove, Nodes è il numero di nodi e $perc\_att\_ferrovie$ è un parametro scelto dall'utente in fase di creazione dell'istanza e compreso tra 0 ed 1. In questo modo, la probabilità che venga a crearsi un collegamento ferroviario tra $i$ e $j$ è tanto più alta quanto più i due nodi sono lontani. La probabilità è uguale ad 1 quando i due nodi sono il primo (1) e l'ultimo (Nodes). L'utente tramite il paramentro $perc\_att\_ferrovie$ è in grado di controllare ulteriormente il numero di ferrovie che possono venire a crearsi. 
 \\
-Il nostro generatore, genera quindi per ogni coppia di nodi una strada e con probabilità variabile una ferrovia. Per scoraggiare l'utilizzo indiscriminato di strade su collegamenti lunghi (visto che le specifiche del problema indicavano che ogni coppia di nodi dovesse essere collegata almeno da una strada), abbiamo moltiplicato il costo del collegamento (stradale o ferroviario) per $|i-j|$ così che utilizzare più collegamenti, ma corti, abbia un costo generalmente inferiore.
+Il nostro generatore, genera quindi per ogni coppia di nodi, una strada e con probabilità variabile una ferrovia. Per scoraggiare l'utilizzo indiscriminato di strade su collegamenti lunghi (visto che le specifiche del problema indicavano che ogni coppia di nodi dovesse essere collegata almeno da una strada), abbiamo moltiplicato il costo del collegamento (stradale o ferroviario) per $|i-j|$ così che utilizzare più collegamenti, ma corti, abbia un costo generalmente inferiore.
 \\
 Visto che le specifiche richiedevano che i costi e le capacità delle ferrovie fossero minori delle strade, il generatore di istanze genera i costi e le capacità in maniera randomica ma all'interno di intervalli predefiniti, così da impedire che esista un collegamento stradale tra due nodi con un costo (capacità) minore della corrispettiva ferrovia (se creata).
 \\
 Altro parametro a cui abbiamo fatto attenzione è $K$ ossia il numero massimo di collegamenti servibili in un solo percorso. Nel nostro generatore $K$ è generato 4 volte per ogni istanza tenendo conto del numero di nodi e facendo in modo di avere $K$ crescenti a partire da valori bassi sino a valori leggermente più alti. In questo modo abbiamo potuto osservare come per una stessa istanza, $K$ influezzasse il risultato in termini di costo minimo e tempo di esecuzione.
 \\
-Infine, il numero di ordini $H$ è generato come : $\frac{Nodes}{2}$
+Infine, il numero di ordini $H$ è generato come : $\ceil*{\frac{Nodes}{2}}$
 
 \subsection{Generator.py}
 Per generare una sequenza di istanze .cmpl basta lanciare lo script generator.py con i seguenti parametri:
@@ -146,7 +149,7 @@ Per testare come il generatore creasse istanze effettivamente più difficili da 
     \item Percentuale di attivazione delle ferrovie : 0.1, 0.5, 0.9
     \item K : variabile tra 1 e 25 in base al numero dei nodi, ma comunque usando 3 o 4 diversi K per ogni configurazione.
 \end{itemize}
-In totale abbiamo generato 66 istanze .cmpl i cui risultati (completi) sono mostrati in \cref{appendice}. In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 100 minuti e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
+In totale abbiamo generato 66 diverse istanze .cmpl (per la stessa combinazione di $Nodes$ e $perc\_att\_ferr$ ci sono 3 o 4 istanze con gli stessi dati di input e solo $K$ diverso) i cui risultati (completi) sono mostrati in \cref{appendice}. In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 100 minuti e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
 \begin{itemize}
     \item S.O. : Windows 10
     \item Processore : intel core i7-7700HQ 4 core (8 Threads)
@@ -156,7 +159,9 @@ In totale abbiamo generato 66 istanze .cmpl i cui risultati (completi) sono most
 La percentuale di attivazione delle ferrovie influenza molto la facilità con la quale è trovata la soluzione ottima. Con 100 nodi e percentuale di attivazione $= 0.1$ come visibile in \cref{tab:perc01}, nessuno dei due solvers riesce a trovare la soluzione ottima in un tempo ragionevole tranne che per il caso con $k = 2$ e come solver $glpk$, questo perchè un K così basso rispetto al numero di possibili collegamenti riduce di molto lo spazio di ricerca. Con una percentuale di attivazione delle ferrovie $= 0.5$ e $=0.9$ le istanze da 100 nodi, vengono invece solo risolte da $glpk$ come visibile in \cref{tab:perc05} e \cref{tab:perc09} e con tempi generalmente inferiori.
 Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima tra i nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
 \\
-\\
+Per quanto riguarda le esecuzioni fallite con 100 nodi (\cref{tab:perc01}), riducendo il numero di collegamenti stradali ,passando quindi da un grafo completo ad uno sparso (impostando la probabilità di creare un collegamento stradale da 1 ad 0.1), il solver $glpk$ riesce in poco tempo a trovare la soluzione ottima. Non abbiamo però incluso questa serie di esperimenti, poichè le istanze non sarebbero state aderenti alla formulazione del problema. Aumentando il numero di nodi fino a 1000 e mantendo il grafo sparso, al contrario, non è stato possibile trovare neanche una soluzione ammissibile in meno di due ore (già la sola creazione del modello riempie le due ore a disposizione).
+
+\clearpage
 
 \section{Tabelle e Immagini}
 \label{appendice}
