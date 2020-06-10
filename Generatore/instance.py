@@ -18,7 +18,7 @@ def instance_generator(Orders=2, Nodes=4,min_demand=10, max_demand=50, min_cap_s
 
     for i in range(capacities.shape[0]):
         for j in range(capacities.shape[1]):
-            att_strade = i!=j
+            att_strade = i!=j and random.uniform(0,1)<0.1
             capacities[i,j,0] = random.randint(max_demand, max_cap_strade) if att_strade else 0
             costs[i,j,0] = random.randint(min_costs_strade, max_costs_strade)*abs(i-j) if att_strade else 0
 
