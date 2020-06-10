@@ -154,10 +154,11 @@ In totale abbiamo generato 66 istanze .cmpl i cui risultati (completi) sono most
     \item S.video : gtx 1060m
 \end{itemize}
 La percentuale di attivazione delle ferrovie influenza molto la facilità con la quale è trovata la soluzione ottima. Con 100 nodi e percentuale di attivazione $= 0.1$ come visibile in \cref{tab:perc01}, nessuno dei due solvers riesce a trovare la soluzione ottima in un tempo ragionevole tranne che per il caso con $k = 2$ e come solver $glpk$, questo perchè un K così basso rispetto al numero di possibili collegamenti riduce di molto lo spazio di ricerca. Con una percentuale di attivazione delle ferrovie $= 0.5$ e $=0.9$ le istanze da 100 nodi, vengono invece solo risolte da $glpk$ come visibile in \cref{tab:perc05} e \cref{tab:perc09} e con tempi generalmente inferiori.
-Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima per la generazione dei nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
+Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima tra i nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
+\\
+\\
 
-
-\section{Appendice}
+\section{Tabelle e Immagini}
 \label{appendice}
 
 % Please add the following required packages to your document preamble:
