@@ -1,6 +1,6 @@
 # Ignore
-Generatore/*.cmpl
-*.cmpl
+# Generatore/*.cmpl
+# *.cmpl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
