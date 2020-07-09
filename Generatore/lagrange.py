@@ -60,5 +60,7 @@ if __name__ == "__main__":
     arr_prob = read_problem(args.p)
 
     lag_cost, y_lagranges = read_lagrange(args.l, arr_prob)
-
-    print(arr_prob)
+    print('*******************')
+    print("Lag cost:")
+    print(lag_cost)
+    print('******************')
