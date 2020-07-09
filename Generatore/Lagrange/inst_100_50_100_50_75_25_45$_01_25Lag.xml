@@ -1,7 +1,7 @@
 <?xml version = "1.1" encoding="UTF-8" standalone="yes"?>
 <CmplSolutions version="1.0">
    <general>
-       <instanceName>inst_100_50_100_50_75_25_45$_01_12.cmpl</instanceName>
+       <instanceName>inst_100_50_100_50_75_25_45$_01_25.cmpl</instanceName>
        <nrOfVariables>1000000</nrOfVariables>
        <nrOfConstraints>15050</nrOfConstraints>
        <objectiveName>cost</objectiveName>
@@ -229,56 +229,56 @@
            <constraint idx="4846" name="bilancio[97,47]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
            <constraint idx="4857" name="bilancio[98,8]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
            <constraint idx="4888" name="bilancio[98,39]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
-           <constraint idx="5000" name="lunghezza[1]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5001" name="lunghezza[2]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5002" name="lunghezza[3]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5003" name="lunghezza[4]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5004" name="lunghezza[5]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5005" name="lunghezza[6]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5006" name="lunghezza[7]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5007" name="lunghezza[8]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5008" name="lunghezza[9]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5009" name="lunghezza[10]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5010" name="lunghezza[11]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5011" name="lunghezza[12]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5012" name="lunghezza[13]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5013" name="lunghezza[14]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5014" name="lunghezza[15]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5015" name="lunghezza[16]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5016" name="lunghezza[17]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5017" name="lunghezza[18]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5018" name="lunghezza[19]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5019" name="lunghezza[20]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5020" name="lunghezza[21]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5021" name="lunghezza[22]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5022" name="lunghezza[23]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5023" name="lunghezza[24]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5024" name="lunghezza[25]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5025" name="lunghezza[26]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5026" name="lunghezza[27]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5027" name="lunghezza[28]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5028" name="lunghezza[29]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5029" name="lunghezza[30]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5030" name="lunghezza[31]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5031" name="lunghezza[32]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5032" name="lunghezza[33]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5033" name="lunghezza[34]" type="L" activity="5" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5034" name="lunghezza[35]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5035" name="lunghezza[36]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5036" name="lunghezza[37]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5037" name="lunghezza[38]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5038" name="lunghezza[39]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5039" name="lunghezza[40]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5040" name="lunghezza[41]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5041" name="lunghezza[42]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5042" name="lunghezza[43]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5043" name="lunghezza[44]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5044" name="lunghezza[45]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5045" name="lunghezza[46]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5046" name="lunghezza[47]" type="L" activity="2" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5047" name="lunghezza[48]" type="L" activity="4" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5048" name="lunghezza[49]" type="L" activity="3" lowerBound="-INF" upperBound="12" marginal="NaN"/>
-           <constraint idx="5049" name="lunghezza[50]" type="L" activity="1" lowerBound="-INF" upperBound="12" marginal="NaN"/>
+           <constraint idx="5000" name="lunghezza[1]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5001" name="lunghezza[2]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5002" name="lunghezza[3]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5003" name="lunghezza[4]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5004" name="lunghezza[5]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5005" name="lunghezza[6]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5006" name="lunghezza[7]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5007" name="lunghezza[8]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5008" name="lunghezza[9]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5009" name="lunghezza[10]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5010" name="lunghezza[11]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5011" name="lunghezza[12]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5012" name="lunghezza[13]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5013" name="lunghezza[14]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5014" name="lunghezza[15]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5015" name="lunghezza[16]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5016" name="lunghezza[17]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5017" name="lunghezza[18]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5018" name="lunghezza[19]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5019" name="lunghezza[20]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5020" name="lunghezza[21]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5021" name="lunghezza[22]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5022" name="lunghezza[23]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5023" name="lunghezza[24]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5024" name="lunghezza[25]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5025" name="lunghezza[26]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5026" name="lunghezza[27]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5027" name="lunghezza[28]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5028" name="lunghezza[29]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5029" name="lunghezza[30]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5030" name="lunghezza[31]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5031" name="lunghezza[32]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5032" name="lunghezza[33]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5033" name="lunghezza[34]" type="L" activity="5" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5034" name="lunghezza[35]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5035" name="lunghezza[36]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5036" name="lunghezza[37]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5037" name="lunghezza[38]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5038" name="lunghezza[39]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5039" name="lunghezza[40]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5040" name="lunghezza[41]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5041" name="lunghezza[42]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5042" name="lunghezza[43]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5043" name="lunghezza[44]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5044" name="lunghezza[45]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5045" name="lunghezza[46]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5046" name="lunghezza[47]" type="L" activity="2" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5047" name="lunghezza[48]" type="L" activity="4" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5048" name="lunghezza[49]" type="L" activity="3" lowerBound="-INF" upperBound="25" marginal="NaN"/>
+           <constraint idx="5049" name="lunghezza[50]" type="L" activity="1" lowerBound="-INF" upperBound="25" marginal="NaN"/>
            <constraint idx="5186" name="unico[1,69,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="5191" name="unico[1,71,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="5292" name="unico[2,22,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
