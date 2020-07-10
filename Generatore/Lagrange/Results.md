@@ -1,3 +1,5 @@
+## W = 1
+
 ### Name : inst_100_50_100_50_75_25_45_01_2
 - Upper Orig : 60244 (optimum)
 - Lower Orig : 59167

@@ -39,7 +39,7 @@ def instance_generator(Orders=2, Nodes=4,min_demand=10, max_demand=50, min_cap_s
             capacities[i,j,1] = random.randint(min_cap_ferrovie, max_cap_ferrovie) if (att_ferrovia) else 0
             #capacities[i,j] = tuple(capacities[i,j])
 
-            costs[i,j,1] = random.randint(min_costs_ferrovie, max_costs_ferrovie)*abs(i-j) if (att_ferrovia) else 0
+            costs[i,j,1] = random.randint(min_costs_ferrovie, max_costs_ferrovie)*abs(i-j) if (att_ferrovia) else 10e6
             #costs[i,j] = tuple(costs[i,j])
             fn='),'
             if j==Nodes-1:
