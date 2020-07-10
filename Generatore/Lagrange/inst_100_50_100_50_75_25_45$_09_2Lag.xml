@@ -11,7 +11,7 @@
        <variablesDisplayOptions>nonZeroVariables (all)</variablesDisplayOptions>
        <constraintsDisplayOptions>nonZeroConstraints (all)</constraintsDisplayOptions>
    </general>
-   <solution idx="0" status="optimal" value="55225">
+   <solution idx="0" status="optimal" value="51523.8">
        <variables>
            <variable idx="13105" name="y[1,66,53,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="13530" name="y[1,68,66,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
@@ -28,7 +28,8 @@
            <variable idx="146621" name="y[8,34,11,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="175339" name="y[9,77,70,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="176752" name="y[9,84,77,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
-           <variable idx="197017" name="y[10,86,9,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="190217" name="y[10,52,9,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="197103" name="y[10,86,52,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="204767" name="y[11,24,84,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="205046" name="y[11,26,24,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="235154" name="y[12,76,78,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
@@ -209,7 +210,7 @@
            <constraint idx="5006" name="lunghezza[7]" type="L" activity="2" lowerBound="-INF" upperBound="2" marginal="NaN"/>
            <constraint idx="5007" name="lunghezza[8]" type="L" activity="1" lowerBound="-INF" upperBound="2" marginal="NaN"/>
            <constraint idx="5008" name="lunghezza[9]" type="L" activity="2" lowerBound="-INF" upperBound="2" marginal="NaN"/>
-           <constraint idx="5009" name="lunghezza[10]" type="L" activity="1" lowerBound="-INF" upperBound="2" marginal="NaN"/>
+           <constraint idx="5009" name="lunghezza[10]" type="L" activity="2" lowerBound="-INF" upperBound="2" marginal="NaN"/>
            <constraint idx="5010" name="lunghezza[11]" type="L" activity="2" lowerBound="-INF" upperBound="2" marginal="NaN"/>
            <constraint idx="5011" name="lunghezza[12]" type="L" activity="2" lowerBound="-INF" upperBound="2" marginal="NaN"/>
            <constraint idx="5012" name="lunghezza[13]" type="L" activity="2" lowerBound="-INF" upperBound="2" marginal="NaN"/>
@@ -265,6 +266,7 @@
            <constraint idx="6517" name="unico[8,34,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="6803" name="unico[9,77,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="6816" name="unico[9,84,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="6953" name="unico[10,52,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="7021" name="unico[10,86,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="7097" name="unico[11,24,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="7100" name="unico[11,26,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>

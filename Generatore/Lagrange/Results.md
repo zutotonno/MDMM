@@ -56,7 +56,7 @@
 
 ### Name : inst_100_50_100_50_75_25_45_09_2
 - Upper Orig : 50915 (optimum)
-- Lower Orig : 4629
+- Lower Orig : 46290
 - Gap Orig : 4.10
 - Upper Relax : 55225 (optimum)
 - Relax in Original : 49081
