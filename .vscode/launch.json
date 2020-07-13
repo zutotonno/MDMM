@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-p","E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45_01_2.cmpl","-l","E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_2Lag.xml" ]
+            "args": ["-sol","E:/MDDM/Progetto/MDMM/Generatore/inst_100_50_100_50_75_25_45$_01_2.xml","E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_2Lag.xml" ]
         }
     ]
 }
