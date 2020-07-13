@@ -9,6 +9,8 @@
 \usepackage{amsfonts} 
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{mathtools}
+\usepackage{todonotes}
+
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \title{MDMM Project}
@@ -142,14 +144,14 @@ Non viene esposto all'utente la possibilità di cambiare i costi e e le capacit�
 
 Riguardo le capacità delle ferrovie abbiamo scelto di utilizzare il valore $max\_demand$ come \textbf{capacità minima ferroviaria} (così da non rischiare la creazione di ferrovie potenzialmente non utilizzabili per nessun ordine), mentre per la \textbf{capacità massima ferroviaria} abbiamo moltiplicato la capacità minima per $1.5$. Riguardo le strade, la \textbf{capacità minima stradale} è ottenuta sommando $1$ alla capacità massima delle ferrovie, mentre la \textbf{capacità massima stradale} è ottenuta raddoppiando la capacità minima.
 
-\section{Soluzioni e performances}
+\section{Implementazione e risultati}
 Per testare come il generatore creasse istanze effettivamente più difficili da risolvere al variare dei parametri esposti all'utente, abbiamo lanciato una serie di esperimenti con i due solver : $cbc$ e $glpk$ ed usando i seguenti parametri del generatore:
 \begin{itemize}
     \item Numero di nodi : 10, 50, 100
     \item Percentuale di attivazione delle ferrovie : 0.1, 0.5, 0.9
     \item K : variabile tra 1 e 25 in base al numero dei nodi, ma comunque usando 3 o 4 diversi K per ogni configurazione.
 \end{itemize}
-In totale abbiamo generato 66 diverse istanze .cmpl (per la stessa combinazione di $Nodes$ e $perc\_att\_ferr$ ci sono 3 o 4 istanze con gli stessi dati di input e solo $K$ diverso) i cui risultati (completi) sono mostrati in \cref{appendice}. In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 100 minuti e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
+In totale abbiamo generato 66 diverse istanze .cmpl (per la stessa combinazione di $Nodes$ e $perc\_att\_ferr$ ci sono 3 o 4 istanze con gli stessi dati di input e solo $K$ diverso) i cui risultati (completi) sono mostrati in \cref{appendice}. In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 300 secondi e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
 \begin{itemize}
     \item S.O. : Windows 10
     \item Processore : intel core i7-7700HQ 4 core (8 Threads)
@@ -160,6 +162,64 @@ La percentuale di attivazione delle ferrovie influenza molto la facilità con la
 Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima tra i nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
 \\
 Per quanto riguarda le esecuzioni fallite con 100 nodi (\cref{tab:perc01}), riducendo il numero di collegamenti stradali ,passando quindi da un grafo completo ad uno sparso (impostando la probabilità di creare un collegamento stradale da 1 ad 0.1), il solver $glpk$ riesce in poco tempo a trovare la soluzione ottima. Non abbiamo però incluso questa serie di esperimenti, poichè le istanze non sarebbero state aderenti alla formulazione del problema. Aumentando il numero di nodi fino a 1000 e mantendo il grafo sparso, al contrario, non è stato possibile trovare neanche una soluzione ammissibile in meno di due ore (già la sola creazione del modello riempie le due ore a disposizione).
+
+
+Osservando le tabelle è possibile notare un notevole incremento del tempo di calcolo al crescere delle dimensioni del problema, per problemi di piccole dimensiioni l'algoritmo si comporta abbastanza bene ottenendo soluzioni ottime in tempi accettabili; tuttavia aumentando le dimensioni del problema, il tempo di calcolo cresce esponenzialmente, raggiungendo valori non più accettabili. Il motivo per il quale si ottengono dei tempi di calcolo molto elevati sta nel fatto che questi algoritmi trovano velocemente la soluzione ottima, ma impiegano molto tempo per garantire l'ottimalità. In conclusione la risoluzione del problema mediante GLPK garantisce di fornire soluzioni ottime, ma le prestazioni in termini di tempo di calcolo sono decisamente scarse. Per problemii di piccole dimensioni l'algoritmo funziona abbastanza bene risolvendo il problema in tempi ragionevoli, incrementando le dimensiioni del problema il risultato fornito è sempre l'ottimo, ma il tempo di calcolo non è più accettabile. 
+
+
+\section{Riformulazione e Risultati}
+
+Allo scopo di ridurre i tempi di calcolo delle istanze nella quali il GAP tra il lower-bound e la soluzione trovata nei 5 minuti a disposizione del solutore era troppo alto, abbiamo provato due strategie:
+\begin{itemize}
+    \item Provare a ridurre l'upper-bound aggiungendo valid inequalities
+    \item Utilizzare le soluzioni di un rilassamento lagrangeano per il nostro porblema e provare ad alzare il lower-bound
+\end{itemize}
+Riguardo la prima strategia abbiamo pensato di aggiungere al modello un vincolo che impedisca al solutore di cercare tra le soluzioni che avessero un ciclo di lunghezza 3. Più formalmente:
+\begin{align}
+    \sum_{(h=1)}^H y_{i_{1}i_{2}}^h + y_{i_{2}i_{3}}^h + y_{i_{3}i_{1}}^h \leq 2, \; \;
+    \forall (i_1,i_2), (i_2,i_3), (i_3,i_1)   \in A ,
+    i_1 < i_2 < i_3
+\end{align}
+Purtroppo, questo vincolo che in teoria avrebbe dovuto sveltire la risoluzione del problema, ha fatto aumentare di troppo i tempi di creazione del modello e non ci ha reso possibile vedere quanto avremmo potuto guadagnare in termini di riduzione del gap lavorando sull'upper bound.
+
+Riguardo la seconda strategia, ossia quella tesa ad aumentare il lower-bound, abbiamo rilassato la formulazione del problema spostando i vincoli di capacità nella funzione obiettivo. La soluzione ottima del problema rilassato è un bound duale al valore ottimo del problema originale.
+Il duale Lagrangeano del nostro modello è definito a partire dal rilassamento Lagrangeano dei vincoli complicanti 
+\begin{align}
+    \sum_{(h=1)}^H y_{ij}^h \cdot d^h \leq u_{ij}, \; \; \forall (i,j) \in A
+    \label{eq:vcap}
+\end{align}
+ovvero:
+
+\begin{align}
+    \phi(w) = min (\sum_{(i,j) \in A}\sum_{h=1}^H c_{ij} \cdot y_{ij}^h + \sum_{(i,j) \in A} w_{ij} \cdot(\sum_{h=1}^H y_{ij}^h \cdot d^h - u_{ij})
+    \label{mod:obj}
+    \\
+    (\sum_{j}y_{ji}^h)- (\sum_{j}y_{ij}^h ) = b_i^h, \; \; \forall i \in N, h=1, ... H
+    \label{mod:v2}
+    \\
+    \sum_{(i,j)} y_{ij}^h  \leq K, \; \; h=1, ... H
+    \label{mod:v4}
+    \\
+    \sum_{j} y_{ij}^h \leq 1, \; \; \forall i \in \textit{N} , h=1, ... H
+    \label{mod:v5}
+    \\
+     y_{ij}^h \in \{0,1\}, \; \; \forall (i,j) \in A, h=1, ... H
+    \label{mod:lag}
+\end{align}
+
+
+dove le variabili $w_{ij}$ sono i moltiplicatori lagrangeani (non negativi) associati ai vincoli rilassati.
+Se z è il valore della funzione obiettivo del nostro modello all'ottimo, vale la relazione:
+\begin{align}
+ \phi(w) \leq z \; \;     \forall w \geq 0
+\end{align}
+
+Non è garantito comunque che anche scegliendo in modo ottimale i moltiplicatori lagrangeani si ottenga la soluzione ottima del problema originario, anche se tale soluzione è ammissibile. 
+Nel nostro caso, non abbiamo utilizzato meccanismi di ottimizzazione per i moltiplicatori lagrangeani ma li abbiamo scelti, provandone alcuni valori e in modo che fossero costanti per tutti gli archi. In particolare, i valori testati nel rilassamento sono stati: 1, 0.5, 0.4 .
+Questa scelta è stata guidata dal fatto che le capacità sono tutte dello stesso ordine di grandezza e direttamente proporzionali ai costi (per archi della stessa lunghezza). Lo script \emph{lagrange.py}, legge la soluzione del problema duale in .xml e la sostituisce nella formulazione originale del problema utilizzando il corrispondente file .cmpl.
+
+Come è possibile vedere in tabella \todo{mettere la tabella del lagrangiano} risolvendo il duale lagrangeano si trovano lower-bound con valori maggiori rispetto a quelli trovati utilizzando la formulazione originale. Per la maggiorparte delle istanze dove il gap era abbastanza alto (>3\%) il gap è stato più che dimezzato mentre per le istanze con gap già abbastanza piccolo il guadagno non è stato molto importante.
+
 
 \clearpage
 
@@ -276,5 +336,8 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 \end{table}
 
 
-\end{document}
+\clearpage
 
+
+
+\end{document}
