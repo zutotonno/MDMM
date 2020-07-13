@@ -13,7 +13,14 @@
             "args": ["-sol",
                 "E:/MDDM/Progetto/MDMM/Generatore/inst_100_50_100_50_75_25_45$_01_/inst_100_50_100_50_75_25_45$_01_2.xml",
                 "E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_2Lag.xml",
-                "E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_7Lag.xml"
+                "E:/MDDM/Progetto/MDMM/Generatore/inst_100_50_100_50_75_25_45$_01_/inst_100_50_100_50_75_25_45$_01_7.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_7Lag.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/inst_100_50_100_50_75_25_45$_01_/inst_100_50_100_50_75_25_45$_01_12.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_12Lag.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/inst_100_50_100_50_75_25_45$_01_/inst_100_50_100_50_75_25_45$_01_25.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_01_25Lag.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/inst_100_50_100_50_75_25_45$_09_/inst_100_50_100_50_75_25_45$_09_2.xml",
+                "E:/MDDM/Progetto/MDMM/Generatore/Lagrange/inst_100_50_100_50_75_25_45$_09_2Lag.xml",
              ]
         }
     ]
