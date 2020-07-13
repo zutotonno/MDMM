@@ -1,5 +1,9 @@
 %arg -ignoreZeros
 %arg -solver glpk
+
+
+
+%opt glpk tmlim 300
 parameters:
 K :=25;
 ORDERS := 1(1)50;

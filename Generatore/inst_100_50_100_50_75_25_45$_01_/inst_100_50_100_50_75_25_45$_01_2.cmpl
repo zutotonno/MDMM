@@ -1,6 +1,7 @@
 %arg -ignoreZeros
+%arg -solver glpk
 
-%opt cbc sec 60
+%opt glpk tmlim 300	
 parameters:
 K :=2;
 ORDERS := 1(1)50;
@@ -216,6 +217,7 @@ objectives:
 cost: sum{ h in ORDERS, i in NODES , j in NODES, e in EDGES : c[i,j,e] * y[h,i,j,e] } -> min;
 constraints:
 bilancio  { i in NODES,  h in ORDERS: sum{ j in NODES, e in EDGES : y[h,j,i,e] } - sum{ j in NODES, e in EDGES : y[h,i,j,e] } = b[i,h]; }
-capacity { i in NODES , j in NODES, e in EDGES : sum{ h in ORDERS : y[h,i,j,e] * d[h] } <= u[i,j,e]; }
-lunghezza { h in ORDERS : sum {i in NODES, j in NODES, e in EDGES : y[h,i,j,e]} <= K ; }
+capacity { i in NODES , j in NODES, e in EDGES : sum{ h in ORDERS : y[h,i,j,e] * d[h] } <= u[i,j,e];}
+lunghezza { h in ORDERS :sum{i in NODES, j in NODES, e in EDGES : y[h,i,j,e]} <= K ; }
 unico {h in ORDERS, i in NODES, e in EDGES: sum {j in NODES: y[h,i,j,e]} <= 1; }
+
