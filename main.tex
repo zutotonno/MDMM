@@ -10,6 +10,7 @@
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{mathtools}
 \usepackage{todonotes}
+\usepackage[width=12cm, left=4cm]{geometry}
 
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
@@ -161,18 +162,19 @@ In totale abbiamo generato 66 diverse istanze .cmpl (per la stessa combinazione 
 La percentuale di attivazione delle ferrovie influenza molto la facilità con la quale è trovata la soluzione ottima. Con 100 nodi e percentuale di attivazione $= 0.1$ come visibile in \cref{tab:perc01}, nessuno dei due solvers riesce a trovare la soluzione ottima in un tempo ragionevole tranne che per il caso con $k = 2$ e come solver $glpk$, questo perchè un K così basso rispetto al numero di possibili collegamenti riduce di molto lo spazio di ricerca. Con una percentuale di attivazione delle ferrovie $= 0.5$ e $=0.9$ le istanze da 100 nodi, vengono invece solo risolte da $glpk$ come visibile in \cref{tab:perc05} e \cref{tab:perc09} e con tempi generalmente inferiori.
 Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima tra i nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
 \\
-Per quanto riguarda le esecuzioni fallite con 100 nodi (\cref{tab:perc01}), riducendo il numero di collegamenti stradali ,passando quindi da un grafo completo ad uno sparso (impostando la probabilità di creare un collegamento stradale da 1 ad 0.1), il solver $glpk$ riesce in poco tempo a trovare la soluzione ottima. Non abbiamo però incluso questa serie di esperimenti, poichè le istanze non sarebbero state aderenti alla formulazione del problema. Aumentando il numero di nodi fino a 1000 e mantendo il grafo sparso, al contrario, non è stato possibile trovare neanche una soluzione ammissibile in meno di due ore (già la sola creazione del modello riempie le due ore a disposizione).
+Per quanto riguarda le esecuzioni fallite con 100 nodi (\cref{tab:perc01}), riducendo il numero di collegamenti stradali ,passando quindi da un grafo completo ad uno sparso (impostando la probabilità di creare un collegamento stradale da 1 ad 0.1), il solver $glpk$ riesce in poco tempo a trovare la soluzione ottima. Non abbiamo però incluso questa serie di esperimenti, poichè le istanze non sarebbero state aderenti alla formulazione del problema.
 
 
-Osservando le tabelle è possibile notare un notevole incremento del tempo di calcolo al crescere delle dimensioni del problema, per problemi di piccole dimensiioni l'algoritmo si comporta abbastanza bene ottenendo soluzioni ottime in tempi accettabili; tuttavia aumentando le dimensioni del problema, il tempo di calcolo cresce esponenzialmente, raggiungendo valori non più accettabili. Il motivo per il quale si ottengono dei tempi di calcolo molto elevati sta nel fatto che questi algoritmi trovano velocemente la soluzione ottima, ma impiegano molto tempo per garantire l'ottimalità. In conclusione la risoluzione del problema mediante GLPK garantisce di fornire soluzioni ottime, ma le prestazioni in termini di tempo di calcolo sono decisamente scarse. Per problemii di piccole dimensioni l'algoritmo funziona abbastanza bene risolvendo il problema in tempi ragionevoli, incrementando le dimensiioni del problema il risultato fornito è sempre l'ottimo, ma il tempo di calcolo non è più accettabile. 
+Osservando le tabelle è possibile notare un notevole incremento del tempo di calcolo al crescere delle dimensioni del problema. Per problemi di piccole dimensioni il solver si comporta bene ottenendo soluzioni ottime in tempi accettabili (meno di 300 secondi); tuttavia aumentando le dimensioni del problema, ed in particolare utilizzando 100 nodi, il tempo di calcolo cresce in maniera evidente, impendendo al solutore di trovare soluzioni ottime restando nel time-limit. 
+Il gap ottenuto nelle istanze non risolte ottimamente è particolarmente elevato quando le istanze sono caratterizzate da un basso numero di collegamenti ferroviari.
 
 
 \section{Riformulazione e Risultati}
 
-Allo scopo di ridurre i tempi di calcolo delle istanze nella quali il GAP tra il lower-bound e la soluzione trovata nei 5 minuti a disposizione del solutore era troppo alto, abbiamo provato due strategie:
+Allo scopo di ridurre il GAP tra il lower-bound e la soluzione trovata nei 5 minuti a disposizione del solutore abbiamo provato due strategie:
 \begin{itemize}
     \item Provare a ridurre l'upper-bound aggiungendo valid inequalities
-    \item Utilizzare le soluzioni di un rilassamento lagrangeano per il nostro porblema e provare ad alzare il lower-bound
+    \item Utilizzare nella formulazione originale le soluzioni di un rilassamento lagrangeano per il nostro problema e provare ad alzare il lower-bound
 \end{itemize}
 Riguardo la prima strategia abbiamo pensato di aggiungere al modello un vincolo che impedisca al solutore di cercare tra le soluzioni che avessero un ciclo di lunghezza 3. Più formalmente:
 \begin{align}
@@ -182,7 +184,7 @@ Riguardo la prima strategia abbiamo pensato di aggiungere al modello un vincolo 
 \end{align}
 Purtroppo, questo vincolo che in teoria avrebbe dovuto sveltire la risoluzione del problema, ha fatto aumentare di troppo i tempi di creazione del modello e non ci ha reso possibile vedere quanto avremmo potuto guadagnare in termini di riduzione del gap lavorando sull'upper bound.
 
-Riguardo la seconda strategia, ossia quella tesa ad aumentare il lower-bound, abbiamo rilassato la formulazione del problema spostando i vincoli di capacità nella funzione obiettivo. La soluzione ottima del problema rilassato è un bound duale al valore ottimo del problema originale.
+Riguardo la seconda strategia, ossia quella tesa a trovare un lower-bound migliore (più alto), abbiamo rilassato la formulazione del problema spostando i vincoli di capacità nella funzione obiettivo. La soluzione ottima del problema rilassato è un bound duale al valore ottimo del problema originale.
 Il duale Lagrangeano del nostro modello è definito a partire dal rilassamento Lagrangeano dei vincoli complicanti 
 \begin{align}
     \sum_{(h=1)}^H y_{ij}^h \cdot d^h \leq u_{ij}, \; \; \forall (i,j) \in A
@@ -192,16 +194,16 @@ ovvero:
 
 \begin{align}
     \phi(w) = min (\sum_{(i,j) \in A}\sum_{h=1}^H c_{ij} \cdot y_{ij}^h + \sum_{(i,j) \in A} w_{ij} \cdot(\sum_{h=1}^H y_{ij}^h \cdot d^h - u_{ij})
-    \label{mod:obj}
+    \label{mod:lagobj}
     \\
     (\sum_{j}y_{ji}^h)- (\sum_{j}y_{ij}^h ) = b_i^h, \; \; \forall i \in N, h=1, ... H
-    \label{mod:v2}
+    \label{mod:lagv2}
     \\
     \sum_{(i,j)} y_{ij}^h  \leq K, \; \; h=1, ... H
-    \label{mod:v4}
+    \label{mod:lagv4}
     \\
     \sum_{j} y_{ij}^h \leq 1, \; \; \forall i \in \textit{N} , h=1, ... H
-    \label{mod:v5}
+    \label{mod:lagv5}
     \\
      y_{ij}^h \in \{0,1\}, \; \; \forall (i,j) \in A, h=1, ... H
     \label{mod:lag}
@@ -214,12 +216,13 @@ Se z è il valore della funzione obiettivo del nostro modello all'ottimo, vale l
  \phi(w) \leq z \; \;     \forall w \geq 0
 \end{align}
 
-Non è garantito comunque che anche scegliendo in modo ottimale i moltiplicatori lagrangeani si ottenga la soluzione ottima del problema originario, anche se tale soluzione è ammissibile. 
-Nel nostro caso, non abbiamo utilizzato meccanismi di ottimizzazione per i moltiplicatori lagrangeani ma li abbiamo scelti, provandone alcuni valori e in modo che fossero costanti per tutti gli archi. In particolare, i valori testati nel rilassamento sono stati: 1, 0.5, 0.4 .
-Questa scelta è stata guidata dal fatto che le capacità sono tutte dello stesso ordine di grandezza e direttamente proporzionali ai costi (per archi della stessa lunghezza). Lo script \emph{lagrange.py}, legge la soluzione del problema duale in .xml e la sostituisce nella formulazione originale del problema utilizzando il corrispondente file .cmpl.
+Nel nostro caso non abbiamo utilizzato algoritmi di ottimizzazione per i moltiplicatori lagrangeani, ma li abbiamo scelti provandone solo alcuni valori ed in modo che fossero costanti per tutti gli archi. In particolare, i valori testati nel rilassamento sono stati: 1, 0.5, 0.4 .
+Questa scelta è stata guidata dal fatto che le capacità degli archi per le istanze sono tutte dello stesso ordine di grandezza e direttamente proporzionali ai costi (per archi della stessa lunghezza). Lo script \emph{lagrange.py}, legge la soluzione del problema duale in .xml e la sostituisce nella formulazione originale del problema utilizzando il corrispondente file .cmpl.
 
-Come è possibile vedere in tabella \todo{mettere la tabella del lagrangiano} risolvendo il duale lagrangeano si trovano lower-bound con valori maggiori rispetto a quelli trovati utilizzando la formulazione originale. Per la maggiorparte delle istanze dove il gap era abbastanza alto (>3\%) il gap è stato più che dimezzato mentre per le istanze con gap già abbastanza piccolo il guadagno non è stato molto importante.
-
+Come è possibile vedere in \cref{tab:lagrange} risolvendo il duale lagrangeano si trovano lower-bound con valori maggiori rispetto a quelli trovati utilizzando la formulazione originale (che viene rilassata trasformando i vincoli binari in vincoli reali). Per la maggior parte delle istanze dove il gap era abbastanza alto (>3\%) lo stesso è stato ridotto notevolmente mentre per le istanze con gap già abbastanza piccolo il guadagno non è stato molto importante. In particolare il gap era già abbastanza piccolo nella versione originale in tutte le istanze con una percentuale di attivazione delle ferrovie elevata. Riguardo il parametro K abbiamo notato che nelle istanze dove la percentuale di attivazione delle ferrovie era piccola, usare un K troppo grande ha effetti negativi sulla risoluzione del problema in quanto lo spazio di ricerca viene inutilmente ingrandito. Questo fatto è confermato anche dalle soluzioni trovate nel problema duale che oltre un certo K smettono di scendere nei valori.
+Lo script \emph{eval\_activation.py} prende in input una serie di soluzioni in formato .xml e ne estrae il numero di ferrovie e strade attivate così come il numero di ordini da soddisfare. Nelle istanze dove la riduzione del gap è stata importante (prime quattro istanze in \cref{tab:lagrange}) il numero di ferrovie attivate dalle soluzioni rilassate è leggermente superiore a quelle utilizzate nelle soluzioni originali, mentre il numero di strade attivate viene quasi dimezzato. Questo accade perchè nel problema rilassato è possibile sforare i vincoli di capacità e quindi utilizzare da più ordini lo stesso collegamento ferroviario per poi smistare gli ordini utilizzando poche strade che collegano i nodi destinazione con i nodi raggiunti da ferrovie.
+\\
+Quindi al fine di ridurre i costi totali di gestione degli ordini è molto importante aumentare la capacità dei collegamenti ferroviari senza necessariamente attivarne troppi.
 
 \clearpage
 
@@ -229,35 +232,41 @@ Come è possibile vedere in tabella \todo{mettere la tabella del lagrangiano} ri
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[htb]
 \begin{tabular}{|l|l|l|l|
 >{\columncolor[HTML]{C6EFCE}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
->{\columncolor[HTML]{FFEB9C}}l |}
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |}
 \hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} MinCost} & {\color[HTML]{9C6500} Time} \\ \hline
-10 & 0.1 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.1 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0,08s} \\ \hline
-10 & 0.1 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.1 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0,1s} \\ \hline
-10 & 0.1 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.1 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1,73s} \\ \hline
-50 & 0.1 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17,2s} \\ \hline
-50 & 0.1 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 35s} \\ \hline
-50 & 0.1 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 6,9s} \\ \hline
-50 & 0.1 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 41s} \\ \hline
-50 & 0.1 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,5s} \\ \hline
-50 & 0.1 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} \\ \hline
-50 & 0.1 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,1s} \\ \hline
-50 & 0.1 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} \\ \hline
-100 & 0.1 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 59549} & {\color[HTML]{9C6500} 735s} \\ \hline
-100 & 0.1 & 2 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.1 & 7 & 50 & {\color[HTML]{006100} glpk} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.1 & 7 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.1 & 12 & 50 & {\color[HTML]{006100} glpk} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.1 & 12 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.1 & 25 & 50 & {\color[HTML]{006100} glpk} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.1 & 25 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C6500} Time} & {\color[HTML]{9C6500} Memory} & {\color[HTML]{9C0006} Gap} \\ \hline
+10 & 0.1 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.1 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0,08s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.1 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.1 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0,1s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.1 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.1 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1,73s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17,2s} & {\color[HTML]{9C6500} 93,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 35s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 6,9s} & {\color[HTML]{9C6500} 87,3Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 41s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,5s} & {\color[HTML]{9C6500} 89,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,1s} & {\color[HTML]{9C6500} 89,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.1 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+100 & 0.1 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 60239} & {\color[HTML]{9C6500} 59167} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 1042,5Mb} & {\color[HTML]{9C0006} 1.8\%} \\ \hline
+100 & 0.1 & 2 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.1 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52563} & {\color[HTML]{9C6500} 50858} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 725,7Mb} & {\color[HTML]{9C0006} 3.10\%} \\ \hline
+100 & 0.1 & 7 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.1 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53101} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 684,6Mb} & {\color[HTML]{9C0006} 4.10\%} \\ \hline
+100 & 0.1 & 12 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.1 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53283} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 684,6Mb} & {\color[HTML]{9C0006} 4.50\%} \\ \hline
+100 & 0.1 & 25 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
 \end{tabular}
 \caption{\label{tab:perc01} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.1$}
 \end{table}
@@ -266,35 +275,41 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-\begin{table}[]
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[htb]
 \begin{tabular}{|l|l|l|l|
 >{\columncolor[HTML]{C6EFCE}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
->{\columncolor[HTML]{FFEB9C}}l |}
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |}
 \hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} MinCost} & {\color[HTML]{9C6500} Time} \\ \hline
-10 & 0.5 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.5 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0,12s} \\ \hline
-10 & 0.5 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.5 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 1s} \\ \hline
-10 & 0.5 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.5 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0,13s} \\ \hline
-50 & 0.5 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 9s} \\ \hline
-50 & 0.5 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 35s} \\ \hline
-50 & 0.5 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 77s} \\ \hline
-50 & 0.5 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 40s} \\ \hline
-50 & 0.5 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 39s} \\ \hline
-50 & 0.5 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 37s} \\ \hline
-50 & 0.5 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} \\ \hline
-50 & 0.5 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} \\ \hline
-100 & 0.5 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 56257} & {\color[HTML]{9C6500} 198s} \\ \hline
-100 & 0.5 & 2 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.5 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52391} & {\color[HTML]{9C6500} 3066s} \\ \hline
-100 & 0.5 & 7 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.5 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52391} & {\color[HTML]{9C6500} 2852s} \\ \hline
-100 & 0.5 & 12 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.5 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52391} & {\color[HTML]{9C6500} 2636s} \\ \hline
-100 & 0.5 & 25 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C6500} Time} & {\color[HTML]{9C6500} Memory} & {\color[HTML]{9C0006} Gap} \\ \hline
+10 & 0.5 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.5 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0,12s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.5 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.5 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 1s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.5 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.5 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0,13s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 9s} & {\color[HTML]{9C6500} 88,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 35s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 77s} & {\color[HTML]{9C6500} 120,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 40s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 39s} & {\color[HTML]{9C6500} 105,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 37s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} & {\color[HTML]{9C6500} 102,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.5 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+100 & 0.5 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 56257} & {\color[HTML]{9C6500} 56257} & {\color[HTML]{9C6500} 198s} & {\color[HTML]{9C6500} 722,5Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+100 & 0.5 & 2 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.5 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52700} & {\color[HTML]{9C6500} 52229} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 704,3Mb} & {\color[HTML]{9C0006} 0.9\%} \\ \hline
+100 & 0.5 & 7 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.5 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 704,3 Mb} & {\color[HTML]{9C0006} 1.30\%} \\ \hline
+100 & 0.5 & 12 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.5 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 704.3Mb} & {\color[HTML]{9C0006} 1.30\%} \\ \hline
+100 & 0.5 & 25 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
 \end{tabular}
 \caption{\label{tab:perc05} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.5$}
 \end{table}
@@ -302,39 +317,80 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-\begin{table}[]
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[htb]
 \begin{tabular}{|l|l|l|l|
 >{\columncolor[HTML]{C6EFCE}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
->{\columncolor[HTML]{FFEB9C}}l |}
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |}
 \hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} MinCost} & {\color[HTML]{9C6500} Time} \\ \hline
-10 & 0.9 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.9 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0,11s} \\ \hline
-10 & 0.9 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.9 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} \\ \hline
-10 & 0.9 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} \\ \hline
-10 & 0.9 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} \\ \hline
-50 & 0.9 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 6s} \\ \hline
-50 & 0.9 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 24,12s} \\ \hline
-50 & 0.9 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 9s} \\ \hline
-50 & 0.9 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 28,64s} \\ \hline
-50 & 0.9 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} \\ \hline
-50 & 0.9 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 28,97s} \\ \hline
-50 & 0.9 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} \\ \hline
-50 & 0.9 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 31s} \\ \hline
-100 & 0.9 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 49034} & {\color[HTML]{9C6500} 524s} \\ \hline
-100 & 0.9 & 2 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.9 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45577} & {\color[HTML]{9C6500} 5856s} \\ \hline
-100 & 0.9 & 7 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.9 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45577} & {\color[HTML]{9C6500} 4502s} \\ \hline
-100 & 0.9 & 12 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
-100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45577} & {\color[HTML]{9C6500} 4200s} \\ \hline
-100 & 0.9 & 25 & 50 & {\color[HTML]{006100} cbc} & \multicolumn{1}{r|}{\cellcolor[HTML]{FFEB9C}{\color[HTML]{9C6500} NoSol}} & {\color[HTML]{9C6500} } \\ \hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C6500} Time} & {\color[HTML]{9C6500} Memory} & {\color[HTML]{9C0006} Gap} \\ \hline
+10 & 0.9 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.9 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0,11s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.9 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.9 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.9 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+10 & 0.9 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 6s} & {\color[HTML]{9C6500} 90,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 24,12s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 9s} & {\color[HTML]{9C6500} 94,3Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 28,64s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} & {\color[HTML]{9C6500} 94,1Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 28,97s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} & {\color[HTML]{9C6500} 94,3Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
+50 & 0.9 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 31s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
+100 & 0.9 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 50915} & {\color[HTML]{9C6500} 46290} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 883,9Mb} & {\color[HTML]{9C0006} 4.1\%} \\ \hline
+100 & 0.9 & 2 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.9 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 795,4Mb} & {\color[HTML]{9C0006} 0.50\%} \\ \hline
+100 & 0.9 & 7 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.9 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 822,2Mb} & {\color[HTML]{9C0006} 0.50\%} \\ \hline
+100 & 0.9 & 12 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 859.4 Mb} & {\color[HTML]{9C0006} 0.50\%} \\ \hline
+100 & 0.9 & 25 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
 \end{tabular}
 \caption{\label{tab:perc09} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.9$}
 \end{table}
 
+
+
+\newgeometry{left=1cm, right=1cm}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+
+\begin{table}[htb]
+\scalebox{0.92}{
+\begin{tabular}{|l|l|l|l|
+>{\columncolor[HTML]{C6EFCE}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |
+>{\columncolor[HTML]{FFC7CE}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |}
+\hline
+Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C0006} SolutionRelax} & {\color[HTML]{9C0006} NewLower} & Gap & {\color[HTML]{9C0006} NewGap} \\ \hline
+100 & 0.1 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 60239} & {\color[HTML]{9C6500} 59167} & {\color[HTML]{9C0006} 66078} & {\color[HTML]{9C0006} 59891} & 1.8\% & {\color[HTML]{9C0006} 0.6\%} \\ \hline
+100 & 0.1 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52563} & {\color[HTML]{9C6500} 50858} & {\color[HTML]{9C0006} 60090} & {\color[HTML]{9C0006} 51563} & 3.10\% & {\color[HTML]{9C0006} 1.9\%} \\ \hline
+100 & 0.1 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53101} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C0006} 60090} & {\color[HTML]{9C0006} 51563} & 4.10\% & {\color[HTML]{9C0006} 2.8\%} \\ \hline
+100 & 0.1 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53283} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C0006} 60090} & {\color[HTML]{9C0006} 51563} & 4.50\% & {\color[HTML]{9C0006} 3.2\%} \\ \hline
+100 & 0.5 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52700} & {\color[HTML]{9C6500} 52229} & {\color[HTML]{9C0006} 56962} & {\color[HTML]{9C0006} 52306} & 0.9\% & {\color[HTML]{9C0006} 0.7\%} \\ \hline
+100 & 0.5 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C0006} 56962} & {\color[HTML]{9C0006} 52306} & 1.30\% & {\color[HTML]{9C0006} 1.10\%} \\ \hline
+100 & 0.5 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C0006} 56962} & {\color[HTML]{9C0006} 52306} & 1.30\% & {\color[HTML]{9C0006} 1.10\%} \\ \hline
+100 & 0.9 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 50915} & {\color[HTML]{9C6500} 46290} & {\color[HTML]{9C0006} 55225} & {\color[HTML]{9C0006} 49081} & 4.1\% & {\color[HTML]{9C0006} 3.6\%} \\ \hline
+100 & 0.9 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
+100 & 0.9 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
+100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
+\end{tabular}
+}
+\caption{\label{tab:lagrange} In giallo soluzione trovata dal solutore nel limite dei 300 secondi. In rosso il nuovo gap calcolato utilizzando come nuovo lowerbound la soluzione del problema lagrangeano all'interno della funzione obiettivo del problema originale}
+\end{table}
 
 \clearpage
 
