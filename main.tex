@@ -178,9 +178,9 @@ Allo scopo di ridurre il GAP tra il lower-bound e la soluzione trovata nei 5 min
 \end{itemize}
 Riguardo la prima strategia abbiamo pensato di aggiungere al modello un vincolo che impedisca al solutore di cercare tra le soluzioni che avessero un ciclo di lunghezza 3. Più formalmente:
 \begin{align}
-    \sum_{(h=1)}^H y_{i_{1}i_{2}}^h + y_{i_{2}i_{3}}^h + y_{i_{3}i_{1}}^h \leq 2, \; \;
-    \forall (i_1,i_2), (i_2,i_3), (i_3,i_1)   \in A ,
-    i_1 < i_2 < i_3
+    y_{i_{1}i_{2}}^h + y_{i_{2}i_{3}}^h + y_{i_{3}i_{1}}^h \leq 2, \; \;
+    \forall (i_1,i_2), (i_2,i_3), (i_3,i_1)   \in A , h=1, ... H,
+    i_1 < i_2, i_1 < i_3
 \end{align}
 Purtroppo, questo vincolo che in teoria avrebbe dovuto sveltire la risoluzione del problema, ha fatto aumentare di troppo i tempi di creazione del modello e non ci ha reso possibile vedere quanto avremmo potuto guadagnare in termini di riduzione del gap lavorando sull'upper bound.
 
@@ -213,13 +213,14 @@ ovvero:
 dove le variabili $w_{ij}$ sono i moltiplicatori lagrangeani (non negativi) associati ai vincoli rilassati.
 Se z è il valore della funzione obiettivo del nostro modello all'ottimo, vale la relazione:
 \begin{align}
- \phi(w) \leq z \; \;     \forall w \geq 0
+ \phi^*(w) \leq z \; \;     \forall w \geq 0
 \end{align}
-
+dove  $\phi^*(w)$ è la soluzione ottima del lagrangeano.
+\\
 Nel nostro caso non abbiamo utilizzato algoritmi di ottimizzazione per i moltiplicatori lagrangeani, ma li abbiamo scelti provandone solo alcuni valori ed in modo che fossero costanti per tutti gli archi. In particolare, i valori testati nel rilassamento sono stati: 1, 0.5, 0.4 .
-Questa scelta è stata guidata dal fatto che le capacità degli archi per le istanze sono tutte dello stesso ordine di grandezza e direttamente proporzionali ai costi (per archi della stessa lunghezza). Lo script \emph{lagrange.py}, legge la soluzione del problema duale in .xml e la sostituisce nella formulazione originale del problema utilizzando il corrispondente file .cmpl.
+Questa scelta è stata guidata dal fatto che le capacità e i costi degli archi per le istanze sono tutte dello stesso ordine di grandezza (per archi della stessa lunghezza). Lo script \emph{lagrange.py}, legge la soluzione del problema duale in .xml e la sostituisce nella formulazione originale del problema utilizzando il corrispondente file .cmpl.
 
-Come è possibile vedere in \cref{tab:lagrange} risolvendo il duale lagrangeano si trovano lower-bound con valori maggiori rispetto a quelli trovati utilizzando la formulazione originale (che viene rilassata trasformando i vincoli binari in vincoli reali). Per la maggior parte delle istanze dove il gap era abbastanza alto (>3\%) lo stesso è stato ridotto notevolmente mentre per le istanze con gap già abbastanza piccolo il guadagno non è stato molto importante. In particolare il gap era già abbastanza piccolo nella versione originale in tutte le istanze con una percentuale di attivazione delle ferrovie elevata. Riguardo il parametro K abbiamo notato che nelle istanze dove la percentuale di attivazione delle ferrovie era piccola, usare un K troppo grande ha effetti negativi sulla risoluzione del problema in quanto lo spazio di ricerca viene inutilmente ingrandito. Questo fatto è confermato anche dalle soluzioni trovate nel problema duale che oltre un certo K smettono di scendere nei valori.
+Come è possibile vedere in \cref{tab:lagrange} risolvendo il duale lagrangeano si trovano lower-bound con valori maggiori rispetto a quelli trovati utilizzando la formulazione originale (che viene rilassata trasformando i vincoli binari in vincoli reali). Per la maggior parte delle istanze dove il gap era abbastanza alto (>3\%) lo stesso è stato ridotto notevolmente mentre per le istanze con gap già abbastanza piccolo il guadagno non è stato molto importante. In particolare il gap era già abbastanza piccolo nella versione originale in tutte le istanze con una percentuale di attivazione delle ferrovie elevata. Riguardo al parametro K abbiamo notato che nelle istanze dove la percentuale di attivazione delle ferrovie era piccola, usare un K troppo grande ha effetti negativi sulla risoluzione del problema in quanto lo spazio di ricerca viene inutilmente ingrandito. Questo fatto è confermato anche dalle soluzioni trovate nel problema duale che oltre un certo K smettono di scendere nei valori.
 Lo script \emph{eval\_activation.py} prende in input una serie di soluzioni in formato .xml e ne estrae il numero di ferrovie e strade attivate così come il numero di ordini da soddisfare. Nelle istanze dove la riduzione del gap è stata importante (prime quattro istanze in \cref{tab:lagrange}) il numero di ferrovie attivate dalle soluzioni rilassate è leggermente superiore a quelle utilizzate nelle soluzioni originali, mentre il numero di strade attivate viene quasi dimezzato. Questo accade perchè nel problema rilassato è possibile sforare i vincoli di capacità e quindi utilizzare da più ordini lo stesso collegamento ferroviario per poi smistare gli ordini utilizzando poche strade che collegano i nodi destinazione con i nodi raggiunti da ferrovie.
 \\
 Quindi al fine di ridurre i costi totali di gestione degli ordini è molto importante aumentare la capacità dei collegamenti ferroviari senza necessariamente attivarne troppi.
@@ -389,7 +390,7 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
 \end{tabular}
 }
-\caption{\label{tab:lagrange} In giallo soluzione trovata dal solutore nel limite dei 300 secondi. In rosso il nuovo gap calcolato utilizzando come nuovo lowerbound la soluzione del problema lagrangeano all'interno della funzione obiettivo del problema originale}
+\caption{\label{tab:lagrange} In giallo la soluzione trovata dal solutore nel limite dei 300 secondi. In rosso il nuovo gap calcolato utilizzando, come nuovo lowerbound, la soluzione del problema lagrangeano all'interno della funzione obiettivo del problema originale}
 \end{table}
 
 \clearpage
