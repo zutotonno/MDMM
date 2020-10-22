@@ -42,8 +42,8 @@ foreach($d in $dir)
 		}
 
 		$hash = @{instance=$instance_list;sol=$sol_list; low=$low_list; gap=$gap_list; time=$time_list; mem=$mem_list}
-		$file_name = $current_folder
-		$file_name += $current_folder.Substring(0,$current_folder.Length - 1)
+		$file_name = $d2
+		$file_name += $d2.Substring(0,$d2.Length - 1)
 		$file_name += ".csv"
 		$hash.GetEnumerator() | Select-Object Name, @{n='Value'; e={$_.Value -join ', '}} | Export-Csv -NoTypeInformation -Path $file_name
 	}
