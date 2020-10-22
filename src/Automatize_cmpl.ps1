@@ -1,11 +1,11 @@
-﻿Set-Location -Path E:\MDDM\Progetto\MDMM\dati\datibuoni
+﻿Set-Location -Path D:\Lavoro\GitHub\MDMM\dati\datibuoni
 
-$dir = dir E:\MDDM\Progetto\MDMM\dati\datibuoni
+$dir = dir D:\Lavoro\GitHub\MDMM\dati\datibuoni
 foreach($d in $dir)
 {
 	foreach($d2 in $d)
 	{
-		$files = Get-ChildItem $d2 -Filter *.cmpl
+		$files = Get-ChildItem $d2.name -Filter *.cmpl
 		$sol_list = [System.Collections.ArrayList]@()
 		$mem_list = [System.Collections.ArrayList]@()
 		$time_list = [System.Collections.ArrayList]@()
@@ -42,8 +42,8 @@ foreach($d in $dir)
 		}
 
 		$hash = @{instance=$instance_list;sol=$sol_list; low=$low_list; gap=$gap_list; time=$time_list; mem=$mem_list}
-		$file_name = $d2
-		$file_name += $d2.Substring(0,$d2.Length - 1)
+		$file_name = $d2.name
+		$file_name += $d2.name.Substring(0,$d2.name.Length - 1)
 		$file_name += ".csv"
 		$hash.GetEnumerator() | Select-Object Name, @{n='Value'; e={$_.Value -join ', '}} | Export-Csv -NoTypeInformation -Path $file_name
 	}
