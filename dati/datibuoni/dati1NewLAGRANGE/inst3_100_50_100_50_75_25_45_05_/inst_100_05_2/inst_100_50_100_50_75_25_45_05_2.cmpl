@@ -1,7 +1,7 @@
 %arg -ignoreZeros
-%arg -solution inst_100_50_100_50_75_25_45$_09_2Lag.xml
 %arg -solver glpk
 %opt glpk tmlim 300
+%arg -solution inst_100_50_100_50_75_25_45_05_2_Lag.xml
 parameters:
 K :=2;
 ORDERS := 1(1)50;
@@ -214,7 +214,7 @@ b[NODES,ORDERS] := ((0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 variables:
 y[ORDERS,NODES,NODES,EDGES]: integer[0..1];
 objectives:
-cost: sum{ h in ORDERS, i in NODES , j in NODES, e in EDGES : c[i,j,e] * y[h,i,j,e] } + sum{ h in ORDERS, i in NODES , j in NODES, e in EDGES : d[h] * y[h,i,j,e] - u[i,j,e]} -> min;
+cost: sum{ h in ORDERS, i in NODES , j in NODES, e in EDGES : c[i,j,e] * y[h,i,j,e] } + sum{ h in ORDERS, i in NODES , j in NODES, e in EDGES : 0.5 * d[h] * y[h,i,j,e] - u[i,j,e]} -> min;
 constraints:
 bilancio  { i in NODES,  h in ORDERS: sum{ j in NODES, e in EDGES : y[h,j,i,e] } - sum{ j in NODES, e in EDGES : y[h,i,j,e] } = b[i,h]; }
 lunghezza { h in ORDERS : sum {i in NODES, j in NODES, e in EDGES : y[h,i,j,e]} <= K ; }

@@ -1,0 +1,187 @@
+<?xml version = "1.1" encoding="UTF-8" standalone="yes"?>
+<CmplSolutions version="1.0">
+   <general>
+       <instanceName>inst_50_50_100_50_75_25_45_01_4 (2).cmpl</instanceName>
+       <nrOfVariables>125000</nrOfVariables>
+       <nrOfConstraints>3775</nrOfConstraints>
+       <objectiveName>cost</objectiveName>
+       <objectiveSense>min</objectiveSense>
+       <nrOfSolutions>1</nrOfSolutions>
+       <solverName>GLPK</solverName>
+       <variablesDisplayOptions>nonZeroVariables (all)</variablesDisplayOptions>
+       <constraintsDisplayOptions>nonZeroConstraints (all)</constraintsDisplayOptions>
+   </general>
+   <solution idx="0" status="optimal" value="17951">
+       <variables>
+           <variable idx="2354" name="y[1,24,28,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="9382" name="y[2,44,42,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="11946" name="y[3,20,24,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="12385" name="y[3,24,43,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="14296" name="y[3,43,49,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="17672" name="y[4,27,37,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="20712" name="y[5,8,7,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="22415" name="y[5,25,8,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="22548" name="y[5,26,25,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="25835" name="y[6,9,18,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="34072" name="y[7,41,37,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="36018" name="y[8,11,10,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="36420" name="y[8,15,11,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="38329" name="y[8,34,15,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="38666" name="y[8,37,34,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="43254" name="y[9,33,28,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="48564" name="y[10,36,33,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="48970" name="y[10,40,36,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="51252" name="y[11,13,27,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="58374" name="y[12,34,38,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="60206" name="y[13,3,4,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="65402" name="y[14,5,2,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="68809" name="y[14,39,5,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="69076" name="y[14,41,39,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="73682" name="y[15,37,42,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="76424" name="y[16,15,13,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="78329" name="y[16,34,15,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="82360" name="y[17,24,31,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="87552" name="y[18,26,27,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="89651" name="y[18,47,26,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="89792" name="y[18,48,47,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="90389" name="y[19,4,45,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="94490" name="y[19,45,46,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="97356" name="y[20,24,29,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="104492" name="y[21,45,47,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="104651" name="y[21,47,26,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="106218" name="y[22,13,10,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="109025" name="y[22,41,13,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="109180" name="y[22,42,41,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="111128" name="y[23,12,15,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="111481" name="y[23,15,41,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="114098" name="y[23,41,50,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="115720" name="y[24,8,11,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="122565" name="y[25,26,33,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="123268" name="y[25,33,35,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="123493" name="y[25,35,47,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+       </variables>
+       <linearConstraints> 
+           <constraint idx="38" name="bilancio[2,14]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="62" name="bilancio[3,13]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="87" name="bilancio[4,13]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="93" name="bilancio[4,19]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="154" name="bilancio[7,5]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="198" name="bilancio[8,24]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="205" name="bilancio[9,6]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="232" name="bilancio[10,8]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="246" name="bilancio[10,22]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="273" name="bilancio[11,24]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="297" name="bilancio[12,23]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="310" name="bilancio[13,11]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="315" name="bilancio[13,16]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="430" name="bilancio[18,6]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="477" name="bilancio[20,3]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="575" name="bilancio[24,1]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="591" name="bilancio[24,17]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="594" name="bilancio[24,20]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="629" name="bilancio[26,5]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="645" name="bilancio[26,21]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="649" name="bilancio[26,25]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="653" name="bilancio[27,4]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="660" name="bilancio[27,11]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="667" name="bilancio[27,18]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="675" name="bilancio[28,1]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="683" name="bilancio[28,9]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="719" name="bilancio[29,20]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="766" name="bilancio[31,17]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="808" name="bilancio[33,9]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="809" name="bilancio[33,10]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="836" name="bilancio[34,12]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="840" name="bilancio[34,16]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="903" name="bilancio[37,4]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="906" name="bilancio[37,7]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="907" name="bilancio[37,8]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="914" name="bilancio[37,15]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="936" name="bilancio[38,12]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="984" name="bilancio[40,10]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1006" name="bilancio[41,7]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1013" name="bilancio[41,14]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1026" name="bilancio[42,2]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="1039" name="bilancio[42,15]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="1046" name="bilancio[42,22]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1076" name="bilancio[44,2]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1120" name="bilancio[45,21]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1143" name="bilancio[46,19]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="1174" name="bilancio[47,25]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="1192" name="bilancio[48,18]" type="E" activity="-1" lowerBound="-1" upperBound="-1" marginal="NaN"/>
+           <constraint idx="1202" name="bilancio[49,3]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="1247" name="bilancio[50,23]" type="E" activity="1" lowerBound="1" upperBound="1" marginal="NaN"/>
+           <constraint idx="1250" name="lunghezza[1]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1251" name="lunghezza[2]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1252" name="lunghezza[3]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1253" name="lunghezza[4]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1254" name="lunghezza[5]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1255" name="lunghezza[6]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1256" name="lunghezza[7]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1257" name="lunghezza[8]" type="L" activity="4" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1258" name="lunghezza[9]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1259" name="lunghezza[10]" type="L" activity="2" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1260" name="lunghezza[11]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1261" name="lunghezza[12]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1262" name="lunghezza[13]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1263" name="lunghezza[14]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1264" name="lunghezza[15]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1265" name="lunghezza[16]" type="L" activity="2" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1266" name="lunghezza[17]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1267" name="lunghezza[18]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1268" name="lunghezza[19]" type="L" activity="2" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1269" name="lunghezza[20]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1270" name="lunghezza[21]" type="L" activity="2" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1271" name="lunghezza[22]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1272" name="lunghezza[23]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1273" name="lunghezza[24]" type="L" activity="1" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1274" name="lunghezza[25]" type="L" activity="3" lowerBound="-INF" upperBound="4" marginal="NaN"/>
+           <constraint idx="1321" name="unico[1,24,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1461" name="unico[2,44,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1513" name="unico[3,20,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1522" name="unico[3,24,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1559" name="unico[3,43,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1627" name="unico[4,27,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1689" name="unico[5,8,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1724" name="unico[5,25,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1725" name="unico[5,26,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1792" name="unico[6,9,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1955" name="unico[7,41,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="1995" name="unico[8,11,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2003" name="unico[8,15,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2042" name="unico[8,34,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2047" name="unico[8,37,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2139" name="unico[9,33,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2245" name="unico[10,36,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2253" name="unico[10,40,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2299" name="unico[11,13,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2441" name="unico[12,34,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2479" name="unico[13,3,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2583" name="unico[14,5,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2652" name="unico[14,39,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2655" name="unico[14,41,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2747" name="unico[15,37,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2803" name="unico[16,15,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2842" name="unico[16,34,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="2921" name="unico[17,24,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3025" name="unico[18,26,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3068" name="unico[18,47,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3069" name="unico[18,48,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3082" name="unico[19,4,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3163" name="unico[19,45,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3221" name="unico[20,24,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3363" name="unico[21,45,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3368" name="unico[21,47,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3399" name="unico[22,13,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3456" name="unico[22,41,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3457" name="unico[22,42,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3497" name="unico[23,12,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3504" name="unico[23,15,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3555" name="unico[23,41,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3589" name="unico[24,8,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3726" name="unico[25,26,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3739" name="unico[25,33,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="3744" name="unico[25,35,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+       </linearConstraints>
+   </solution>
+</CmplSolutions>
