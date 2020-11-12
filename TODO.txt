@@ -1,0 +1,3 @@
+[] Chiamare script lagrange.py in powershell su file .cmpl e .xaml
+[] Cercare in output la stringa *Lag cost* e prendere valore a riga successiva
+[] Salvare su file i vari lag cost
