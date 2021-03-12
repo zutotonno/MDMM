@@ -1,7 +1,7 @@
 <?xml version = "1.1" encoding="UTF-8" standalone="yes"?>
 <CmplSolutions version="1.0">
    <general>
-       <instanceName>inst_100_50_100_50_75_25_45_05_25 (2).cmpl</instanceName>
+       <instanceName>inst_100_50_100_50_75_25_45_05_25_2.cmpl</instanceName>
        <nrOfVariables>1000000</nrOfVariables>
        <nrOfConstraints>15050</nrOfConstraints>
        <objectiveName>cost</objectiveName>

@@ -1,7 +1,7 @@
 <?xml version = "1.1" encoding="UTF-8" standalone="yes"?>
 <CmplSolutions version="1.0">
    <general>
-       <instanceName>inst_100_50_100_50_75_25_45_01_2 (2).cmpl</instanceName>
+       <instanceName>inst_100_50_100_50_75_25_45_01_2_2.cmpl</instanceName>
        <nrOfVariables>1000000</nrOfVariables>
        <nrOfConstraints>15050</nrOfConstraints>
        <objectiveName>cost</objectiveName>
@@ -11,7 +11,7 @@
        <variablesDisplayOptions>nonZeroVariables (all)</variablesDisplayOptions>
        <constraintsDisplayOptions>nonZeroConstraints (all)</constraintsDisplayOptions>
    </general>
-   <solution idx="0" status="optimal" value="66871">
+   <solution idx="0" status="integer feasible (non-optimal)" value="66871">
        <variables>
            <variable idx="10764" name="y[1,54,83,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="23040" name="y[2,16,21,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
