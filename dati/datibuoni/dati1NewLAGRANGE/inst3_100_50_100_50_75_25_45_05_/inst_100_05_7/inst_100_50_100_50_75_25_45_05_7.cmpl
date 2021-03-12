@@ -1,7 +1,7 @@
 %arg -ignoreZeros
 %arg -solver glpk
 %opt glpk tmlim 300
-%arg -solution inst_100_50_100_50_75_25_45_05_7.xml
+%arg -solution inst_100_50_100_50_75_25_45_05_7_Lag.xml
 
 parameters:
 K :=7;
