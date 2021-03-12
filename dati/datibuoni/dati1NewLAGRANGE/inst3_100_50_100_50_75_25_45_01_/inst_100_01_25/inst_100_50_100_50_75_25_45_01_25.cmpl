@@ -2,7 +2,6 @@
 %arg -solver glpk
 
 
-
 %opt glpk tmlim 300
 %arg -solution inst_100_50_100_50_75_25_45_01_25.xml
 parameters:
