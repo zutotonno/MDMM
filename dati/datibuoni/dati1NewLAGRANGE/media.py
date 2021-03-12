@@ -40,5 +40,5 @@ for _dir in _dirs:
 
 
 df_mean_results = pd.DataFrame(mean_results).transpose()
-df_mean_results.to_csv('GLPK_exec.csv')
+df_mean_results.to_csv('LAGRANGE_exec.csv')
 print(mean_results)

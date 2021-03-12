@@ -12,13 +12,14 @@ def read_lagrange(lagrange_instance, problem_cost):
         _curr_y = __curr_y[2:-1]
         y_lagranges.append(_curr_y)
         curr_y = np.fromstring(_curr_y, dtype=int, sep=',')
+        print(curr_y)
         relax_original_cost += problem_cost[curr_y[1]-1,curr_y[2]-1,curr_y[3]-1]
 
 
     return relax_original_cost,y_lagranges
 
 
-def read_problem(problem_instance):
+def read_problem(problem_instance,cost=True):
     str_problem = '('
     with open(problem_instance, mode='r') as myfile:
         init_c = False
