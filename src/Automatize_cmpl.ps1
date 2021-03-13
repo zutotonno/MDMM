@@ -3,6 +3,7 @@
 $style = [Globalization.NumberStyles]::Float
 
 $dir = dir D:\Lavoro\GitHub\MDMM\dati\datibuoni\dati1NewGLPK_0
+
 foreach($d in $dir)
 {
 	$path = Join-Path -Path $d.FullName -ChildPath "*"
