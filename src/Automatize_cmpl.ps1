@@ -2,7 +2,7 @@
     
 $style = [Globalization.NumberStyles]::Float
 
-$dir = dir D:\Lavoro\GitHub\MDMM\dati\datibuoni\dati1NewCBC_0
+$dir = dir D:\Lavoro\GitHub\MDMM\dati\datibuoni\dati1NewGLPK_Mil
 
 foreach($d in $dir)
 {
