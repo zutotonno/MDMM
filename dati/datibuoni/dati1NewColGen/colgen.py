@@ -121,7 +121,7 @@ def generate_newinstance(k, d_Orders, costs, capacities, b_array, filename):
     strCap+=')'
     strCosts+=')'
 
-    b = np.array(b_array).T
+    b = np.array(b_array)
     b = tuple(tuple(x) for x in b)
 
     for i in range(0,4):
