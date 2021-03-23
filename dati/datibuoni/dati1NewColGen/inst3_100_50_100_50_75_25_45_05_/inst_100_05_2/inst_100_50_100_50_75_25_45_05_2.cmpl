@@ -219,5 +219,4 @@ bilancio  { i in NODES,  h in ORDERS: sum{ j in NODES, e in EDGES : y[h,j,i,e] }
 capacity { i in NODES , j in NODES, e in EDGES : sum{ h in ORDERS : y[h,i,j,e] * d[h] } <= u[i,j,e]; }
 lunghezza { h in ORDERS : sum {i in NODES, j in NODES, e in EDGES : y[h,i,j,e]} <= K ; }
 unico {h in ORDERS, i in NODES, e in EDGES: sum {j in NODES: y[h,i,j,e]} <= 1; }
-nodiag {i in NODES, e in EDGES: sum{h in ORDERS: y[h,i,i,e]} <=0;} 
-ciclo {h in ORDERS, i in NODES, e in EDGES, j in NODES, i < j: y[h,i,j,e] + y[h,j,i,e] <= 1;} 
+ 
