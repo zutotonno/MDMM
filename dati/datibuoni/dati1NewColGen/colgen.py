@@ -125,7 +125,7 @@ def generate_newinstance(k, d_Orders, costs, capacities, b_array, filename):
     b = tuple(tuple(x) for x in b)
 
     for i in range(0,4):
-        file_name = filename[:-4]+'_ColGen'+'.cmpl'
+        file_name = filename[:-5]+'_ColGen'+'.cmpl'
         parameters=[]
         parameters.append('K :='+str(k)+';')
         parameters.append('ORDERS := 1(1)'+str(Orders)+';')
