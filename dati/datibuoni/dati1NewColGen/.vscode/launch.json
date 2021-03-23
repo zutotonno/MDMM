@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-p","inst2_50_50_100_50_75_25_45_01_/inst_50_01_4/inst_50_50_100_50_75_25_45_01_4.cmpl"]
+            "args": ["-p","inst3_100_50_100_50_75_25_45_01_/inst100_01_2/inst_100_50_100_50_75_25_45_01_2_2.cmpl"]
         }
     ]
 }
