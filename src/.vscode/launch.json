@@ -11,6 +11,14 @@
             "program": "E:/MDDM/Progetto/MDMM/src/query_c.py",
             "console": "integratedTerminal",
             "args": ["-p","E:/MDDM/Progetto/MDMM/dati/Lagrange/inst_100_50_100_50_75_25_45$_01_7.cmpl"]
+        },
+        {
+            "name": "Colgen",
+            "type": "python",
+            "request": "launch",
+            "program": "E:/MDDM/Progetto/MDMM/src/colgenGap.py",
+            "console": "integratedTerminal",
+            "args": ["-p","E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenGapSi/inst3_100_50_100_50_75_25_45_09_/inst_100_09_25/inst_100_50_100_50_75_25_45_09_25.cmpl"]
         }
     ]
 }
