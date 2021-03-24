@@ -11,7 +11,7 @@
        <variablesDisplayOptions>nonZeroVariables (all)</variablesDisplayOptions>
        <constraintsDisplayOptions>nonZeroConstraints (all)</constraintsDisplayOptions>
    </general>
-   <solution idx="0" status="integer feasible (non-optimal)" value="50004">
+   <solution idx="0" status="integer feasible (non-optimal)" value="50915">
        <variables>
            <variable idx="13105" name="y[1,66,53,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="13530" name="y[1,68,66,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
@@ -28,8 +28,8 @@
            <variable idx="146621" name="y[8,34,11,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="175339" name="y[9,77,70,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="176752" name="y[9,84,77,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
-           <variable idx="181816" name="y[10,10,9,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
-           <variable idx="197019" name="y[10,86,10,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="192816" name="y[10,65,9,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
+           <variable idx="197129" name="y[10,86,65,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="204767" name="y[11,24,84,2]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="205046" name="y[11,26,24,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
            <variable idx="235154" name="y[12,76,78,1]" type="I" activity="1" lowerBound="0" upperBound="1" marginal="NaN"/>
@@ -207,7 +207,6 @@
            <constraint idx="5289" name="capacity[2,45,2]" type="L" activity="76" lowerBound="-INF" upperBound="144" marginal="NaN"/>
            <constraint idx="5400" name="capacity[3,1,1]" type="L" activity="99" lowerBound="-INF" upperBound="182" marginal="NaN"/>
            <constraint idx="6008" name="capacity[6,5,1]" type="L" activity="81" lowerBound="-INF" upperBound="209" marginal="NaN"/>
-           <constraint idx="6816" name="capacity[10,9,1]" type="L" activity="88" lowerBound="-INF" upperBound="232" marginal="NaN"/>
            <constraint idx="8234" name="capacity[17,18,1]" type="L" activity="53" lowerBound="-INF" upperBound="130" marginal="NaN"/>
            <constraint idx="8671" name="capacity[19,36,2]" type="L" activity="94" lowerBound="-INF" upperBound="117" marginal="NaN"/>
            <constraint idx="9240" name="capacity[22,21,1]" type="L" activity="52" lowerBound="-INF" upperBound="259" marginal="NaN"/>
@@ -251,6 +250,7 @@
            <constraint idx="16475" name="capacity[58,38,2]" type="L" activity="97" lowerBound="-INF" upperBound="136" marginal="NaN"/>
            <constraint idx="16510" name="capacity[58,56,1]" type="L" activity="66" lowerBound="-INF" upperBound="298" marginal="NaN"/>
            <constraint idx="17649" name="capacity[64,25,2]" type="L" activity="62" lowerBound="-INF" upperBound="109" marginal="NaN"/>
+           <constraint idx="17816" name="capacity[65,9,1]" type="L" activity="88" lowerBound="-INF" upperBound="138" marginal="NaN"/>
            <constraint idx="17843" name="capacity[65,22,2]" type="L" activity="52" lowerBound="-INF" upperBound="102" marginal="NaN"/>
            <constraint idx="17887" name="capacity[65,44,2]" type="L" activity="86" lowerBound="-INF" upperBound="101" marginal="NaN"/>
            <constraint idx="17926" name="capacity[65,64,1]" type="L" activity="62" lowerBound="-INF" upperBound="157" marginal="NaN"/>
@@ -286,7 +286,7 @@
            <constraint idx="21396" name="capacity[82,99,1]" type="L" activity="78" lowerBound="-INF" upperBound="132" marginal="NaN"/>
            <constraint idx="21752" name="capacity[84,77,1]" type="L" activity="59" lowerBound="-INF" upperBound="272" marginal="NaN"/>
            <constraint idx="21756" name="capacity[84,79,1]" type="L" activity="58" lowerBound="-INF" upperBound="123" marginal="NaN"/>
-           <constraint idx="22019" name="capacity[86,10,2]" type="L" activity="88" lowerBound="-INF" upperBound="128" marginal="NaN"/>
+           <constraint idx="22129" name="capacity[86,65,2]" type="L" activity="88" lowerBound="-INF" upperBound="137" marginal="NaN"/>
            <constraint idx="22946" name="capacity[90,74,1]" type="L" activity="87" lowerBound="-INF" upperBound="171" marginal="NaN"/>
            <constraint idx="23841" name="capacity[95,21,2]" type="L" activity="96" lowerBound="-INF" upperBound="131" marginal="NaN"/>
            <constraint idx="24198" name="capacity[96,100,1]" type="L" activity="81" lowerBound="-INF" upperBound="243" marginal="NaN"/>
@@ -356,7 +356,7 @@
            <constraint idx="26517" name="unico[8,34,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="26803" name="unico[9,77,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="26816" name="unico[9,84,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
-           <constraint idx="26868" name="unico[10,10,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
+           <constraint idx="26978" name="unico[10,65,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="27021" name="unico[10,86,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="27097" name="unico[11,24,2]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
            <constraint idx="27100" name="unico[11,26,1]" type="L" activity="1" lowerBound="-INF" upperBound="1" marginal="NaN"/>
