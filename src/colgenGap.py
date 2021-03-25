@@ -200,13 +200,18 @@ def n_problem(problem_instance):
     return n_problem
 
 
-def cost_sort(narray, odarray, carray):
+def cost_sort(narray, odarray, carray, how='S'):
     cn = dict()
     for n in narray:
         if n not in cn.keys():
             cn[n] = 0
         for od in odarray:
-            costo = carray[n,od,0] + carray[od,n,0]
+            if how == 'S':
+                costo = carray[n,od,0] + carray[od,n,0]
+            elif how == 'R':
+                costo = carray[n,od,1] + carray[od,n,1]
+            elif how == 'B':
+                costo = carray[n,od,1] + carray[od,n,1] + carray[n,od,0] + carray[od,n,0]
             cn[n]+=costo
     return sorted(cn.items(), key=lambda x: x[1])
 
@@ -219,11 +224,18 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         type=str,
+        help='Path of the .cmpl instance'
+    )
+    parser.add_argument(
+        "--how",
+        type=str,
+        help='S for street, R for railways, B for both'
     )
 
 
     args = parser.parse_args()
-    b_array, valid_b = read_problem(args.p)
+    how = args.how
+    b_array, valid_b = read_problem(args.p, nagg=None)
     d_array = d_problem(args.p)
     
 
@@ -233,9 +245,9 @@ if __name__ == "__main__":
     tot_cost = c_problem(args.p, tot_array)
     del_array = np.sort(list(set(tot_array) - set(b_array)))
 
-    del_array = [c[0] for c in cost_sort(del_array, b_array, tot_cost)]
+    del_array = [c[0] for c in cost_sort(del_array, b_array, tot_cost,how=how)]
     for i in range(0,10):
-        b_array, valid_b = read_problem(args.p, del_array[:i+1])
+        b_array, valid_b = read_problem(args.p, nagg = del_array[:i+1])
         c_array = c_problem(args.p, b_array)
         u_array = u_problem(args.p, b_array)
         generate_newinstance(k, d_array, c_array, u_array, valid_b, args.p, i+1)
