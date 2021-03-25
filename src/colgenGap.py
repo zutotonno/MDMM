@@ -224,6 +224,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         type=str,
+        nargs="+",
         help='Path of the .cmpl instance'
     )
     parser.add_argument(
@@ -235,19 +236,21 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     how = args.how
-    b_array, valid_b = read_problem(args.p, nagg=None)
-    d_array = d_problem(args.p)
-    
+    all_inst_path = args.p
+    for inst_path in all_inst_path:
+        b_array, valid_b = read_problem(inst_path, nagg=None)
+        d_array = d_problem(inst_path)
+        
 
-    k = k_problem(args.p)
-    n_p = n_problem(args.p)
-    tot_array = np.arange(0,n_p)
-    tot_cost = c_problem(args.p, tot_array)
-    del_array = np.sort(list(set(tot_array) - set(b_array)))
+        k = k_problem(inst_path)
+        n_p = n_problem(inst_path)
+        tot_array = np.arange(0,n_p)
+        tot_cost = c_problem(inst_path, tot_array)
+        del_array = np.sort(list(set(tot_array) - set(b_array)))
 
-    del_array = [c[0] for c in cost_sort(del_array, b_array, tot_cost,how=how)]
-    for i in range(0,10):
-        b_array, valid_b = read_problem(args.p, nagg = del_array[:i+1])
-        c_array = c_problem(args.p, b_array)
-        u_array = u_problem(args.p, b_array)
-        generate_newinstance(k, d_array, c_array, u_array, valid_b, args.p, i+1)
+        del_array = [c[0] for c in cost_sort(del_array, b_array, tot_cost,how=how)]
+        for i in range(0,10):
+            b_array, valid_b = read_problem(inst_path, nagg = del_array[:i+1])
+            c_array = c_problem(inst_path, b_array)
+            u_array = u_problem(inst_path, b_array)
+            generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, i+1)

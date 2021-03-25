@@ -18,7 +18,17 @@
             "request": "launch",
             "program": "E:/MDDM/Progetto/MDMM/src/colgenGap.py",
             "console": "integratedTerminal",
-            "args": ["-p","E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenGapSi/inst3_100_50_100_50_75_25_45_09_/inst_100_09_25/inst_100_50_100_50_75_25_45_09_25.cmpl"]
+            "args": ["-p",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_01_/inst_100_01_2/inst_100_50_100_50_75_25_45_01_2.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_01_/inst_100_01_2_2/inst_100_50_100_50_75_25_45_01_2_2.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_01_/inst_100_01_7/inst_100_50_100_50_75_25_45_01_7.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_01_/inst_100_01_7_2/inst_100_50_100_50_75_25_45_01_7_2.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_01_/inst_100_01_7_3/inst_100_50_100_50_75_25_45_01_7_3.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_05_/inst_100_05_7/inst_100_50_100_50_75_25_45_05_7.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_05_/inst_100_05_7_3/inst_100_50_100_50_75_25_45_05_7_3.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGenFerrovie/inst3_100_50_100_50_75_25_45_09_/inst_100_09_2/inst_100_50_100_50_75_25_45_09_2.cmpl",
+
+            "--how", "R"]
         }
     ]
 }

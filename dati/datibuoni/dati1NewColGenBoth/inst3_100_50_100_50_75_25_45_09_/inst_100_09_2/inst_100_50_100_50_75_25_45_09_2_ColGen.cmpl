@@ -2,7 +2,7 @@
 %arg -solver glpk
 %opt glpk tmlim 300
 parameters:
-K :=7;
+K :=2;
 ORDERS := 1(1)50;
 NODES := 1(1)66;
 EDGES := 1(1)2;
