@@ -2,7 +2,7 @@
     
 $style = [Globalization.NumberStyles]::Float
 
-$dir = dir D:\Lavoro\GitHub\MDMM\dati\datibuoni\dati1NewColGenFerrovie
+$dir = dir D:\Lavoro\GitHub\MDMM\dati\datibuoni\dati1NewColGenBoth
 foreach($d in $dir)
 {
 	$path = Join-Path -Path $d.FullName -ChildPath "*"
