@@ -47,6 +47,22 @@
                 "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen25Misto/inst3_100_50_100_50_75_25_45_09_/inst_100_09_7/inst_100_50_100_50_75_25_45_09_7.cmpl",
 
             "--how", "M"]
+        },
+        {
+            "name": "Colgen20",
+            "type": "python",
+            "request": "launch",
+            "program": "E:/MDDM/Progetto/MDMM/src/colgenGap20.py",
+            "console": "integratedTerminal",
+            "args": ["-p",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen20Misto/inst3_100_50_100_50_75_25_45_01_/inst_100_01_7/inst_100_50_100_50_75_25_45_01_7.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen20Misto/inst3_100_50_100_50_75_25_45_01_/inst_100_01_7_2/inst_100_50_100_50_75_25_45_01_7_2.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen20Misto/inst3_100_50_100_50_75_25_45_01_/inst_100_01_7_3/inst_100_50_100_50_75_25_45_01_7_3.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen20Misto/inst3_100_50_100_50_75_25_45_05_/inst_100_05_7/inst_100_50_100_50_75_25_45_05_7.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen20Misto/inst3_100_50_100_50_75_25_45_05_/inst_100_05_7_3/inst_100_50_100_50_75_25_45_05_7_3.cmpl",
+                "E:/MDDM/Progetto/MDMM/dati/datibuoni/dati1NewColGen20Misto/inst3_100_50_100_50_75_25_45_09_/inst_100_09_7/inst_100_50_100_50_75_25_45_09_7.cmpl",
+
+            "--how", "M"]
         }
     ]
 }
