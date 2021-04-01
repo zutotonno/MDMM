@@ -145,8 +145,19 @@ Non viene esposto all'utente la possibilità di cambiare i costi e e le capacit�
 
 Riguardo le capacità delle ferrovie abbiamo scelto di utilizzare il valore $max\_demand$ come \textbf{capacità minima ferroviaria} (così da non rischiare la creazione di ferrovie potenzialmente non utilizzabili per nessun ordine), mentre per la \textbf{capacità massima ferroviaria} abbiamo moltiplicato la capacità minima per $1.5$. Riguardo le strade, la \textbf{capacità minima stradale} è ottenuta sommando $1$ alla capacità massima delle ferrovie, mentre la \textbf{capacità massima stradale} è ottenuta raddoppiando la capacità minima.
 
+%%TODO: DESCRIVERE GLI SCRIPT nel readme della repository:
+%% - Lagrange.py
+%% - ColGenGap
+%% - Automatize_CMPL (calcola media ecc...)
+
+
 \section{Implementazione e risultati}
-Per testare come il generatore creasse istanze effettivamente più difficili da risolvere al variare dei parametri esposti all'utente, abbiamo lanciato una serie di esperimenti con i due solver : $cbc$ e $glpk$ ed usando i seguenti parametri del generatore:
+
+%% TODO: cambiare le tabelle:
+%% Aggiungere colonna media e std (delle 3 istanze)
+
+
+Per testare come il generatore crei istanze effettivamente più difficili da risolvere al variare dei parametri esposti all'utente, abbiamo lanciato una serie di esperimenti con i due solver : $cbc$ e $glpk$ ed usando i seguenti parametri del generatore:
 \begin{itemize}
     \item Numero di nodi : 10, 50, 100
     \item Percentuale di attivazione delle ferrovie : 0.1, 0.5, 0.9
@@ -159,6 +170,8 @@ In totale abbiamo generato 66 diverse istanze .cmpl (per la stessa combinazione 
     \item Ram : 16gb ddr4
     \item S.video : gtx 1060m
 \end{itemize}
+Gli script python utilizzati per la creazione delle istanze e per la loro valuzione sono tutti nella cartella \emph{src/}. I dati generati in formato \emph{.cmpl} e le soluzioni salvate in formato \emph{.xml} sono invece nella cartella \emph{dati/}.
+\\
 La percentuale di attivazione delle ferrovie influenza molto la facilità con la quale è trovata la soluzione ottima. Con 100 nodi e percentuale di attivazione $= 0.1$ come visibile in \cref{tab:perc01}, nessuno dei due solvers riesce a trovare la soluzione ottima in un tempo ragionevole tranne che per il caso con $k = 2$ e come solver $glpk$, questo perchè un K così basso rispetto al numero di possibili collegamenti riduce di molto lo spazio di ricerca. Con una percentuale di attivazione delle ferrovie $= 0.5$ e $=0.9$ le istanze da 100 nodi, vengono invece solo risolte da $glpk$ come visibile in \cref{tab:perc05} e \cref{tab:perc09} e con tempi generalmente inferiori.
 Il parametro $k$ che controlla il numero massimo di archi attivabili per un singolo ordine, abbiamo notato che non influisce molto una volta che diventa sufficientemente grande. I miglioramenti più importanti in termini di costo minimo li abbiamo verificati quando si passava da $k = 2$ a $k = 6$. Probabilmente aumentando la distanza minima tra i nodi sorgente e nodi destinazione avremmo potuto vedere miglioramenti più consistenti in termini di costo minimo all'aumentare di $k$, ma al momento la generazione dei bilanci degli ordini è lasciata random.
 \\
@@ -169,8 +182,10 @@ Osservando le tabelle è possibile notare un notevole incremento del tempo di ca
 Il gap ottenuto nelle istanze non risolte ottimamente è particolarmente elevato quando le istanze sono caratterizzate da un basso numero di collegamenti ferroviari.
 
 
-\section{Riformulazione e Risultati}
+\section{Riformulazione e Risultati : Alzare il lower bound}
 
+%% TODO: Rimuovere in table4 la colonna SolutionRelax
+%% Aggiungere colonna media e colonna std (per le 3 istanze)
 Allo scopo di ridurre il GAP tra il lower-bound e la soluzione trovata nei 5 minuti a disposizione del solutore abbiamo provato due strategie:
 \begin{itemize}
     \item Provare a ridurre l'upper-bound aggiungendo valid inequalities
@@ -182,6 +197,11 @@ Riguardo la prima strategia abbiamo pensato di aggiungere al modello un vincolo 
     \forall (i_1,i_2), (i_2,i_3), (i_3,i_1)   \in A , h=1, ... H,
     i_1 < i_2, i_1 < i_3
 \end{align}
+
+%%TODO: aggiungere anche prova con nuove valid inqualities:
+%% - NO DIAG
+%% - EVITARE ANDATA E RITORNO DA STESSA COPPIA DI NODI
+%% - RISULTATI: A volte meglio, a volte peggio :)
 Purtroppo, questo vincolo che in teoria avrebbe dovuto sveltire la risoluzione del problema, ha fatto aumentare di troppo i tempi di creazione del modello e non ci ha reso possibile vedere quanto avremmo potuto guadagnare in termini di riduzione del gap lavorando sull'upper bound.
 
 Riguardo la seconda strategia, ossia quella tesa a trovare un lower-bound migliore (più alto), abbiamo rilassato la formulazione del problema spostando i vincoli di capacità nella funzione obiettivo. La soluzione ottima del problema rilassato è un bound duale al valore ottimo del problema originale.
@@ -224,6 +244,16 @@ Come è possibile vedere in \cref{tab:lagrange} risolvendo il duale lagrangeano 
 Lo script \emph{eval\_activation.py} prende in input una serie di soluzioni in formato .xml e ne estrae il numero di ferrovie e strade attivate così come il numero di ordini da soddisfare. Nelle istanze dove la riduzione del gap è stata importante (prime quattro istanze in \cref{tab:lagrange}) il numero di ferrovie attivate dalle soluzioni rilassate è leggermente superiore a quelle utilizzate nelle soluzioni originali, mentre il numero di strade attivate viene quasi dimezzato. Questo accade perchè nel problema rilassato è possibile sforare i vincoli di capacità e quindi utilizzare da più ordini lo stesso collegamento ferroviario per poi smistare gli ordini utilizzando poche strade che collegano i nodi destinazione con i nodi raggiunti da ferrovie.
 \\
 Quindi al fine di ridurre i costi totali di gestione degli ordini è molto importante aumentare la capacità dei collegamenti ferroviari senza necessariamente attivarne troppi.
+
+\section{Riformulazione e Risultati : Abbassare l'upper bound}
+
+%% TODO: nuova sezione - Riduzione upperbound
+%% Primo tentativo : usare solo i nodi partenza e destinazione -> (+1)
+%% Secondo tentativo: Primo tent. + top 10 nodi a costo minimo (ferr+strade) -> (+1)
+%% Terzo tentativo: Primo tent + top nodi MISTO(5S + 10F, 5S + 15F, 5S + 20F) -> (+2)
+%% Quarto tentativo: Primo tent + top 10S+10F  -> 0
+
+
 
 \clearpage
 
