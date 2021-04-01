@@ -13,7 +13,7 @@ def gen_CapStrada(demand, Orders):
 
 
 
-def generator(num_instances,perc_att_ferrovie):
+def generator(num_instances,perc_att_ferrovie,path='./'):
 
 
     ## Demand
@@ -35,7 +35,7 @@ def generator(num_instances,perc_att_ferrovie):
         max_cap_strade = min_cap_strade * 2
 
 
-        file_name = 'inst_'+str(n)+'_'+str(min_demand)+'_'+str(max_demand)+'_'+str(min_costs_strade)+'_'+\
+        file_name = path+'inst_'+str(n)+'_'+str(min_demand)+'_'+str(max_demand)+'_'+str(min_costs_strade)+'_'+\
         str(max_costs_strade)+'_'+str(min_costs_ferrovie)+'_'+\
         str(max_costs_ferrovie)+ '$_'+str(perc_att_ferrovie).replace('.','')
 
@@ -58,13 +58,20 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-patt",
+        "-pferr",
         type=float,
         default=0.9 # percentuale attivazione ferrovie
+    )
+
+    parser.add_argument(
+        "-p",
+        type=str,
+        default='./' # percentuale attivazione ferrovie
     )
 
     args = parser.parse_args()
 
     num_instances = args.nodes
-    perc_att_ferrovie = args.patt
-    generator(num_instances, perc_att_ferrovie)
+    perc_att_ferrovie = args.pferr
+    path = args.p
+    generator(num_instances, perc_att_ferrovie,path)
