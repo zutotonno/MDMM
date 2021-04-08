@@ -2,8 +2,6 @@ import argparse
 import xml.etree.ElementTree as ET
 import numpy as np
 from ast import literal_eval as make_tuple
-import os
-
 
 def read_lagrange(lagrange_instance, problem_cost):
     root = ET.parse(lagrange_instance).getroot()
@@ -63,7 +61,6 @@ if __name__ == "__main__":
 
     lag_cost, y_lagranges = read_lagrange(args.l, arr_prob)
     print('*******************')
-    print(os.path.basename(args.p))
     print("Lag cost:")
     print(lag_cost)
     print('******************')
