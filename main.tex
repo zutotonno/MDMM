@@ -109,7 +109,7 @@ Il modello matematico che ci è sembrato più adeguato è il Minimum Cost Multic
 
 
 \section{Generatore di istanze}
-La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata generando direttamente il file .cmpl per ogni istanza del problema, con annesso modello matematico. Ogni istanze generata è infatti pronta per essere data in pasto ad un solutore che accetti istanze in formato .cmpl. I nostri test presentati nel paragrafo successivo sono stati effettuati utilizzando i solver $glpk$ e $cbc$. In questa sezione ci proponiamo di svolgere, quindi, i punti 2 e 3 del progetto.
+La funzione $instance\_generator$ all'interno di \textbf{instance.py} viene utilizzata per la generazione dei files .cmpl mentre la funzione $generator$ all'interno dello script file \textbf{generator.py} si occupa della generazione dei parametri necessari all'istanza per essere creata generando direttamente il file .cmpl per ogni istanza del problema, con annesso modello matematico. Ogni istanza generata è infatti pronta per essere data in pasto ad un solutore che accetti istanze in formato .cmpl. I nostri test presentati nel paragrafo successivo sono stati effettuati utilizzando i solver $glpk$ e $cbc$. In questa sezione ci proponiamo di svolgere, quindi, i punti 2 e 3 del progetto.
 
 \subsection{Istance.py}
 Per ottenere le istanze del problema abbiamo deciso di implementare, utilizzando il linguaggio python, un generatore di file .cmpl che tenesse conto delle specifiche del problema per generare delle istanze realistiche. Il problema richiede infatti, che le strade colleghino ogni coppia di nodi e che le ferrovie siano presenti solo sui collegamenti "lunghi". Il nostro generatore, data una coppia $(i,j)$ crea un arco ferroviario tra $i$ e $j$ solo quando la seguente condizione è verificata:
@@ -145,11 +145,6 @@ Non viene esposto all'utente la possibilità di cambiare i costi e e le capacit�
 
 Riguardo le capacità delle ferrovie abbiamo scelto di utilizzare il valore $max\_demand$ come \textbf{capacità minima ferroviaria} (così da non rischiare la creazione di ferrovie potenzialmente non utilizzabili per nessun ordine), mentre per la \textbf{capacità massima ferroviaria} abbiamo moltiplicato la capacità minima per $1.5$. Riguardo le strade, la \textbf{capacità minima stradale} è ottenuta sommando $1$ alla capacità massima delle ferrovie, mentre la \textbf{capacità massima stradale} è ottenuta raddoppiando la capacità minima.
 
-%%TODO: DESCRIVERE GLI SCRIPT nel readme della repository:
-%% - Lagrange.py
-%% - ColGenGap
-%% - Automatize_CMPL (calcola media ecc...)
-
 
 \section{Implementazione e risultati}
 
@@ -161,9 +156,11 @@ Per testare come il generatore crei istanze effettivamente più difficili da ris
 \begin{itemize}
     \item Numero di nodi : 10, 50, 100
     \item Percentuale di attivazione delle ferrovie : 0.1, 0.5, 0.9
-    \item K : variabile tra 1 e 25 in base al numero dei nodi, ma comunque usando 3 o 4 diversi K per ogni configurazione.
 \end{itemize}
-In totale abbiamo generato 66 diverse istanze .cmpl (per la stessa combinazione di $Nodes$ e $perc\_att\_ferr$ ci sono 3 o 4 istanze con gli stessi dati di input e solo $K$ diverso) i cui risultati (completi) sono mostrati in \cref{appendice}. In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 300 secondi e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
+
+In totale abbiamo generato 90 diverse istanze .cmpl (per la stessa combinazione di $Nodes$ e $perc\_att\_ferr$ ci sono 3 o 4 istanze con gli stessi dati di input e solo $K$ diverso i cui risultati (completi) sono mostrati in \cref{appendice}.
+Per ogni $K$, per ogni $\#N$ (numero di nodi) e per ogni $\%Ferr$ (percentuale di attivazione delle ferrovie) abbiamo generato 3 diverse istanze in modo tale da avere una stima di quanto in media, il solutore performa su una determinata tipologia di istanza di problema. 
+In generale, abbiamo notato che utilizzando il solver $glpk$ la soluzione ottima viene trovata in un tempo inferiore rispetto a quella trovata con il solver $cbc$, fatta eccezione per casi sporadici. Come tempo massimo per la risoluzione del problema abbiamo utilizzato 300 secondi e le caratteristiche del pc sul quale abbiamo lanciato le esecuzioni sono le seguenti:
 \begin{itemize}
     \item S.O. : Windows 10
     \item Processore : intel core i7-7700HQ 4 core (8 Threads)
@@ -184,27 +181,7 @@ Il gap ottenuto nelle istanze non risolte ottimamente è particolarmente elevato
 
 \section{Riformulazione e Risultati : Alzare il lower bound}
 
-%% TODO: Rimuovere in table4 la colonna SolutionRelax
-%% Aggiungere colonna media e colonna std (per le 3 istanze)
-Allo scopo di ridurre il GAP tra il lower-bound e la soluzione trovata nei 5 minuti a disposizione del solutore abbiamo provato due strategie:
-\begin{itemize}
-    \item Provare a ridurre l'upper-bound aggiungendo valid inequalities
-    \item Utilizzare nella formulazione originale le soluzioni di un rilassamento lagrangeano per il nostro problema e provare ad alzare il lower-bound
-\end{itemize}
-Riguardo la prima strategia abbiamo pensato di aggiungere al modello un vincolo che impedisca al solutore di cercare tra le soluzioni che avessero un ciclo di lunghezza 3. Più formalmente:
-\begin{align}
-    y_{i_{1}i_{2}}^h + y_{i_{2}i_{3}}^h + y_{i_{3}i_{1}}^h \leq 2, \; \;
-    \forall (i_1,i_2), (i_2,i_3), (i_3,i_1)   \in A , h=1, ... H,
-    i_1 < i_2, i_1 < i_3
-\end{align}
-
-%%TODO: aggiungere anche prova con nuove valid inqualities:
-%% - NO DIAG
-%% - EVITARE ANDATA E RITORNO DA STESSA COPPIA DI NODI
-%% - RISULTATI: A volte meglio, a volte peggio :)
-Purtroppo, questo vincolo che in teoria avrebbe dovuto sveltire la risoluzione del problema, ha fatto aumentare di troppo i tempi di creazione del modello e non ci ha reso possibile vedere quanto avremmo potuto guadagnare in termini di riduzione del gap lavorando sull'upper bound.
-
-Riguardo la seconda strategia, ossia quella tesa a trovare un lower-bound migliore (più alto), abbiamo rilassato la formulazione del problema spostando i vincoli di capacità nella funzione obiettivo. La soluzione ottima del problema rilassato è un bound duale al valore ottimo del problema originale.
+ Per tentare di fornire un lower-bound migliore (più alto), abbiamo rilassato la formulazione del problema spostando i vincoli di capacità nella funzione obiettivo. La soluzione ottima del problema rilassato è un bound duale al valore ottimo del problema originale.
 Il duale Lagrangeano del nostro modello è definito a partire dal rilassamento Lagrangeano dei vincoli complicanti 
 \begin{align}
     \sum_{(h=1)}^H y_{ij}^h \cdot d^h \leq u_{ij}, \; \; \forall (i,j) \in A
@@ -247,16 +224,50 @@ Quindi al fine di ridurre i costi totali di gestione degli ordini è molto impor
 
 \section{Riformulazione e Risultati : Abbassare l'upper bound}
 
-%% TODO: nuova sezione - Riduzione upperbound
+\subsection{Valid Inequalities}
+% TODO: descrivere meglio
+Visto che tutte le istanze nelle quali non riuscivamo ad ottenere un gap = 0, avevano tutte esaurite abbiamo pensato di aggiungere al modello un vincolo che impedisca al solutore di cercare tra le soluzioni che avessero un ciclo di lunghezza 3. Più formalmente:
+\begin{align}
+    y_{i_{1}i_{2}}^h + y_{i_{2}i_{3}}^h + y_{i_{3}i_{1}}^h \leq 2, \; \;
+    \forall (i_1,i_2), (i_2,i_3), (i_3,i_1)   \in A , h=1, ... H,
+    i_1 < i_2, i_1 < i_3
+\end{align}
+
+%%TODO: aggiungere anche prova con nuove valid inqualities:
+%% - NO DIAG
+%% - EVITARE ANDATA E RITORNO DA STESSA COPPIA DI NODI
+%% - RISULTATI: A volte meglio, a volte peggio :)
+Purtroppo, questo vincolo che in teoria avrebbe dovuto sveltire la risoluzione del problema, ha fatto aumentare di troppo i tempi di creazione del modello e non ci ha reso possibile vedere quanto avremmo potuto guadagnare in termini di riduzione del gap lavorando sull'upper bound.
+\\
+Abbiamo poi tentato di rimuovere la valid inequalities di cui sopra e sostituirla con le seguenti :
+\begin{align}
+   \sum_{ h \in Orders}y_{ii}^h \leq 0 \; \forall i \in N
+   \label{eq:nodiag}
+\end{align}
+
+\begin{align}
+   y_{i_{1}i_{2}}^h + y_{i_{2}i_{1}}^h \leq 1\, \; \;
+    \forall (i_1,i_2)  \in A , h=1, ... H,
+    i_1 < i_2,
+    \label{eq:nociclo}
+\end{align}
+In particolare, \cref{eq:nodiag} impedisce la creazione nel modello di collegamenti tra nodi origine e destinazione se il nodo è lo stesso, mentre \cref{eq:nociclo} impedisce la creazione di percorsi che usano lo stesso collegamento per una data commodity, ossia impedisce la generazione di soluzioni aventi cicli di lunghezza 2.
+\\
+Questa soluzione abbiamo immaginato potesse portare ad un branch \& bound più efficace perchè scartavamo a priori soluzioni che sapevamo non potessero essere corrette. In realtà, sebbene questa volta il modello venga correttamente creato ed eseguito, in nessuna istanza è stato apprezzato un miglioramento del gap.
+I risultati delle esecuzioni sono comunque visionabili nella cartella dati1NEWVALID .....[TODO: metti la cartella]
+
+\subsection{Column generation}
+%% TODO:
 %% Primo tentativo : usare solo i nodi partenza e destinazione -> (+1)
 %% Secondo tentativo: Primo tent. + top 10 nodi a costo minimo (ferr+strade) -> (+1)
 %% Terzo tentativo: Primo tent + top nodi MISTO(5S + 10F, 5S + 15F, 5S + 20F) -> (+2)
 %% Quarto tentativo: Primo tent + top 10S+10F  -> 0
-
+Le istanze 
 
 
 \clearpage
-
+\newpage
+\newgeometry{top=20mm, bottom=20mm, left=5mm, right=5mm} 
 \section{Tabelle e Immagini}
 \label{appendice}
 
@@ -266,40 +277,281 @@ Quindi al fine di ridurre i costi totali di gestione degli ordini è molto impor
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[htb]
-\begin{tabular}{|l|l|l|l|
+\begin{tabular}{|l|l|l|
+>{\columncolor[HTML]{C6EFCE}}l |
 >{\columncolor[HTML]{C6EFCE}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |
 >{\columncolor[HTML]{FFC7CE}}l |}
 \hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C6500} Time} & {\color[HTML]{9C6500} Memory} & {\color[HTML]{9C0006} Gap} \\ \hline
-10 & 0.1 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.1 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 1407} & {\color[HTML]{9C6500} 0,08s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.1 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.1 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 1033} & {\color[HTML]{9C6500} 0,1s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.1 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.1 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1014} & {\color[HTML]{9C6500} 1,73s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17,2s} & {\color[HTML]{9C6500} 93,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 17459} & {\color[HTML]{9C6500} 35s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 6,9s} & {\color[HTML]{9C6500} 87,3Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 14784} & {\color[HTML]{9C6500} 41s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,5s} & {\color[HTML]{9C6500} 89,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 6,1s} & {\color[HTML]{9C6500} 89,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.1 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 14734} & {\color[HTML]{9C6500} 29s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-100 & 0.1 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 60239} & {\color[HTML]{9C6500} 59167} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 1042,5Mb} & {\color[HTML]{9C0006} 1.8\%} \\ \hline
-100 & 0.1 & 2 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.1 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52563} & {\color[HTML]{9C6500} 50858} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 725,7Mb} & {\color[HTML]{9C0006} 3.10\%} \\ \hline
-100 & 0.1 & 7 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.1 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53101} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 684,6Mb} & {\color[HTML]{9C0006} 4.10\%} \\ \hline
-100 & 0.1 & 12 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.1 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53283} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 684,6Mb} & {\color[HTML]{9C0006} 4.50\%} \\ \hline
-100 & 0.1 & 25 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+\textbf{\#N} &
+  \textbf{\%Ferr} &
+  \textbf{K} &
+  {\color[HTML]{006100} \textbf{Orders}} &
+  {\color[HTML]{006100} \textbf{Solver}} &
+  {\color[HTML]{9C6500} \textbf{Sol\_avg}} &
+  {\color[HTML]{9C6500} \textbf{Sol\_std}} &
+  {\color[HTML]{9C6500} \textbf{LB\_avg}} &
+  {\color[HTML]{9C6500} \textbf{LB\_std}} &
+  {\color[HTML]{9C6500} \textbf{Time\_avg}} &
+  {\color[HTML]{9C0006} \textbf{Gap\_avg}} &
+  {\color[HTML]{9C0006} \textbf{Gap\_Std}} \\ \hline
+10 &
+  0,1 &
+  2 &
+  {\color[HTML]{006100} 5} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 819} &
+  {\color[HTML]{9C6500} 153,5} &
+  {\color[HTML]{9C6500} 819} &
+  {\color[HTML]{9C6500} 153,5} &
+  {\color[HTML]{9C6500} 0s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,1 &
+  2 &
+  {\color[HTML]{006100} 5} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 819} &
+  {\color[HTML]{9C6500} 153,5} &
+  {\color[HTML]{9C6500} 819} &
+  {\color[HTML]{9C6500} 153,5} &
+  {\color[HTML]{9C6500} 0,1s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,1 &
+  3 &
+  {\color[HTML]{006100} 5} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 805} &
+  {\color[HTML]{9C6500} 148,7} &
+  {\color[HTML]{9C6500} 805} &
+  {\color[HTML]{9C6500} 148,7} &
+  {\color[HTML]{9C6500} 0s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,1 &
+  3 &
+  {\color[HTML]{006100} 5} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 805} &
+  {\color[HTML]{9C6500} 148,7} &
+  {\color[HTML]{9C6500} 805} &
+  {\color[HTML]{9C6500} 148,7} &
+  {\color[HTML]{9C6500} 0,08s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  2 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 18262,3} &
+  {\color[HTML]{9C6500} 1889,4} &
+  {\color[HTML]{9C6500} 18262,3} &
+  {\color[HTML]{9C6500} 1889,4} &
+  {\color[HTML]{9C6500} 11,7s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  2 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 18262,3} &
+  {\color[HTML]{9C6500} 1889,4} &
+  {\color[HTML]{9C6500} 18262,3} &
+  {\color[HTML]{9C6500} 1889,4} &
+  {\color[HTML]{9C6500} 33,9s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  4 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 15852,3} &
+  {\color[HTML]{9C6500} 1689,2} &
+  {\color[HTML]{9C6500} 15798,6} &
+  {\color[HTML]{9C6500} 1613,4} &
+  {\color[HTML]{9C6500} 106,6s} &
+  {\color[HTML]{9C0006} 0.3\%} &
+  {\color[HTML]{9C0006} 0.4\%} \\ \hline
+50 &
+  0,1 &
+  4 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 15841,3} &
+  {\color[HTML]{9C6500} 1673,7} &
+  {\color[HTML]{9C6500} 15841,3} &
+  {\color[HTML]{9C6500} 1673,7} &
+  {\color[HTML]{9C6500} 38,6s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  6 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 15744,6} &
+  {\color[HTML]{9C6500} 1656,2} &
+  {\color[HTML]{9C6500} 15744,6} &
+  {\color[HTML]{9C6500} 1656,2} &
+  {\color[HTML]{9C6500} 20,7s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  6 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 15744,6} &
+  {\color[HTML]{9C6500} 1656,2} &
+  {\color[HTML]{9C6500} 15744,6} &
+  {\color[HTML]{9C6500} 1656,2} &
+  {\color[HTML]{9C6500} 33,8s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  13 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 15742,6} &
+  {\color[HTML]{9C6500} 1653,4} &
+  {\color[HTML]{9C6500} 15742,6} &
+  {\color[HTML]{9C6500} 1653,4} &
+  {\color[HTML]{9C6500} 17,3s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,1 &
+  13 &
+  {\color[HTML]{006100} 25} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 15742,6} &
+  {\color[HTML]{9C6500} 1653,4} &
+  {\color[HTML]{9C6500} 15742,6} &
+  {\color[HTML]{9C6500} 1653,4} &
+  {\color[HTML]{9C6500} 31,4s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+100 &
+  0,1 &
+  2 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 62904} &
+  {\color[HTML]{9C6500} 1941,6} &
+  {\color[HTML]{9C6500} 61228} &
+  {\color[HTML]{9C6500} 2550,9} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 2,6\%} &
+  {\color[HTML]{9C0006} 2,6\%} \\ \hline
+100 &
+  0,1 &
+  2 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,1 &
+  7 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 53421,3} &
+  {\color[HTML]{9C6500} 1502,6} &
+  {\color[HTML]{9C6500} 52272,3} &
+  {\color[HTML]{9C6500} 1790,8} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 2,10\%} &
+  {\color[HTML]{9C0006} 0,70\%} \\ \hline
+100 &
+  0,1 &
+  7 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,1 &
+  12 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 53530} &
+  {\color[HTML]{9C6500} 1323,2} &
+  {\color[HTML]{9C6500} 52281,3} &
+  {\color[HTML]{9C6500} 1822,5} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 2,30\%} &
+  {\color[HTML]{9C0006} 1,30\%} \\ \hline
+100 &
+  0,1 &
+  12 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,1 &
+  25 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 53529,3} &
+  {\color[HTML]{9C6500} 1323,4} &
+  {\color[HTML]{9C6500} 52281,3} &
+  {\color[HTML]{9C6500} 1822,5} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 2,30\%} &
+  {\color[HTML]{9C0006} 1,30\%} \\ \hline
+100 &
+  0,1 &
+  25 &
+  {\color[HTML]{006100} 50} &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
 \end{tabular}
-\caption{\label{tab:perc01} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.1$}
+\caption{\label{tab:perc01} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.1$ - media su 3 istanze per tipologia}
 \end{table}
 
 
@@ -309,6 +561,21 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[htb]
 \begin{tabular}{|l|l|l|l|
 >{\columncolor[HTML]{C6EFCE}}l |
@@ -316,33 +583,265 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |
 >{\columncolor[HTML]{FFC7CE}}l |}
 \hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C6500} Time} & {\color[HTML]{9C6500} Memory} & {\color[HTML]{9C0006} Gap} \\ \hline
-10 & 0.5 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.5 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 874} & {\color[HTML]{9C6500} 0,12s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.5 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.5 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 1s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.5 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.5 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 740} & {\color[HTML]{9C6500} 0,13s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 9s} & {\color[HTML]{9C6500} 88,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 15140} & {\color[HTML]{9C6500} 35s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 77s} & {\color[HTML]{9C6500} 120,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 13620} & {\color[HTML]{9C6500} 40s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 39s} & {\color[HTML]{9C6500} 105,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 37s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} & {\color[HTML]{9C6500} 102,6Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.5 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 13571} & {\color[HTML]{9C6500} 34s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-100 & 0.5 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 56257} & {\color[HTML]{9C6500} 56257} & {\color[HTML]{9C6500} 198s} & {\color[HTML]{9C6500} 722,5Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-100 & 0.5 & 2 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.5 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52700} & {\color[HTML]{9C6500} 52229} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 704,3Mb} & {\color[HTML]{9C0006} 0.9\%} \\ \hline
-100 & 0.5 & 7 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.5 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 704,3 Mb} & {\color[HTML]{9C0006} 1.30\%} \\ \hline
-100 & 0.5 & 12 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.5 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 704.3Mb} & {\color[HTML]{9C0006} 1.30\%} \\ \hline
-100 & 0.5 & 25 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+\textbf{\#N} &
+  \textbf{\%Ferr} &
+  \textbf{K} &
+  \textbf{Orders} &
+  {\color[HTML]{006100} \textbf{Solver}} &
+  {\color[HTML]{9C6500} \textbf{Sol\_avg}} &
+  {\color[HTML]{9C6500} \textbf{Sol\_std}} &
+  {\color[HTML]{9C6500} \textbf{LB\_avg}} &
+  {\color[HTML]{9C6500} \textbf{LB\_std}} &
+  {\color[HTML]{9C6500} \textbf{Time\_avg}} &
+  {\color[HTML]{9C0006} \textbf{Gap\_avg}} &
+  {\color[HTML]{9C0006} \textbf{Gap\_Std}} \\ \hline
+10 &
+  0,5 &
+  2 &
+  5 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 828,3} &
+  {\color[HTML]{9C6500} 129,9} &
+  {\color[HTML]{9C6500} 828,3} &
+  {\color[HTML]{9C6500} 129,9} &
+  {\color[HTML]{9C6500} 0s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,5 &
+  2 &
+  5 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 828,3} &
+  {\color[HTML]{9C6500} 129,9} &
+  {\color[HTML]{9C6500} 828,3} &
+  {\color[HTML]{9C6500} 129,9} &
+  {\color[HTML]{9C6500} 0,07s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,5 &
+  3 &
+  5 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 810} &
+  {\color[HTML]{9C6500} 116,3} &
+  {\color[HTML]{9C6500} 810} &
+  {\color[HTML]{9C6500} 116,3} &
+  {\color[HTML]{9C6500} 0s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,5 &
+  3 &
+  5 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 810} &
+  {\color[HTML]{9C6500} 116,3} &
+  {\color[HTML]{9C6500} 810} &
+  {\color[HTML]{9C6500} 116,3} &
+  {\color[HTML]{9C6500} 0,07s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  2 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 15401,6} &
+  {\color[HTML]{9C6500} 2124} &
+  {\color[HTML]{9C6500} 15401,6} &
+  {\color[HTML]{9C6500} 2124} &
+  {\color[HTML]{9C6500} 4,9s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  2 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 15401,6} &
+  {\color[HTML]{9C6500} 2124} &
+  {\color[HTML]{9C6500} 15401,6} &
+  {\color[HTML]{9C6500} 2124} &
+  {\color[HTML]{9C6500} 28,6s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  4 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 14239,6} &
+  {\color[HTML]{9C6500} 1970,1} &
+  {\color[HTML]{9C6500} 14239,6} &
+  {\color[HTML]{9C6500} 1970,1} &
+  {\color[HTML]{9C6500} 26,5s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  4 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 14239,6} &
+  {\color[HTML]{9C6500} 1970,1} &
+  {\color[HTML]{9C6500} 14239,6} &
+  {\color[HTML]{9C6500} 1970,1} &
+  {\color[HTML]{9C6500} 29,7s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  6 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 15,3s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  6 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 27s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  13 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 14s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,5 &
+  13 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 14210,6} &
+  {\color[HTML]{9C6500} 1965,3} &
+  {\color[HTML]{9C6500} 27,17s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+100 &
+  0,5 &
+  2 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 54272,6} &
+  {\color[HTML]{9C6500} 6806,6} &
+  {\color[HTML]{9C6500} 54272,6} &
+  {\color[HTML]{9C6500} 6806,6} &
+  {\color[HTML]{9C6500} 132,4s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+100 &
+  0,5 &
+  2 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,5 &
+  7 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 48818,6} &
+  {\color[HTML]{9C6500} 4085,1} &
+  {\color[HTML]{9C6500} 48538,3} &
+  {\color[HTML]{9C6500} 3886,7} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,5\%} &
+  {\color[HTML]{9C0006} 0,4\%} \\ \hline
+100 &
+  0,5 &
+  7 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,5 &
+  12 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 48782,3} &
+  {\color[HTML]{9C6500} 4069,7} &
+  {\color[HTML]{9C6500} 48542} &
+  {\color[HTML]{9C6500} 3888,2} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,46\%} &
+  {\color[HTML]{9C0006} 0,36\%} \\ \hline
+100 &
+  0,5 &
+  12 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,5 &
+  25 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 48782,3} &
+  {\color[HTML]{9C6500} 4069,7} &
+  {\color[HTML]{9C6500} 48542} &
+  {\color[HTML]{9C6500} 3888,2} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,46\%} &
+  {\color[HTML]{9C0006} 0,36\%} \\ \hline
+100 &
+  0,5 &
+  25 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
 \end{tabular}
-\caption{\label{tab:perc05} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.5$}
+
+\caption{\label{tab:perc05} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.5$ - media su 3 istanze per tipologia}
 \end{table}
 
 % Please add the following required packages to your document preamble:
@@ -351,6 +850,9 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[htb]
 \begin{tabular}{|l|l|l|l|
 >{\columncolor[HTML]{C6EFCE}}l |
@@ -358,33 +860,265 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
 >{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFEB9C}}l |
+>{\columncolor[HTML]{FFC7CE}}l |
 >{\columncolor[HTML]{FFC7CE}}l |}
 \hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C6500} Time} & {\color[HTML]{9C6500} Memory} & {\color[HTML]{9C0006} Gap} \\ \hline
-10 & 0.9 & 1 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.9 & 1 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 1303} & {\color[HTML]{9C6500} 0,11s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.9 & 2 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.9 & 2 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.9 & 3 & 5 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0s} & {\color[HTML]{9C6500} 0,9Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-10 & 0.9 & 3 & 5 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 852} & {\color[HTML]{9C6500} 0,04s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 2 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 6s} & {\color[HTML]{9C6500} 90,8Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 2 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 15439} & {\color[HTML]{9C6500} 24,12s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 4 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 9s} & {\color[HTML]{9C6500} 94,3Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 4 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 14535} & {\color[HTML]{9C6500} 28,64s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 6 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} & {\color[HTML]{9C6500} 94,1Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 6 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 28,97s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 13 & 25 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 8s} & {\color[HTML]{9C6500} 94,3Mb} & {\color[HTML]{9C0006} 0\%} \\ \hline
-50 & 0.9 & 13 & 25 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 14515} & {\color[HTML]{9C6500} 31s} & {\color[HTML]{9C6500} -} & {\color[HTML]{9C0006} 0\%} \\ \hline
-100 & 0.9 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 50915} & {\color[HTML]{9C6500} 46290} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 883,9Mb} & {\color[HTML]{9C0006} 4.1\%} \\ \hline
-100 & 0.9 & 2 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.9 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 795,4Mb} & {\color[HTML]{9C0006} 0.50\%} \\ \hline
-100 & 0.9 & 7 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.9 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 822,2Mb} & {\color[HTML]{9C0006} 0.50\%} \\ \hline
-100 & 0.9 & 12 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
-100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C6500} /} & {\color[HTML]{9C6500} 859.4 Mb} & {\color[HTML]{9C0006} 0.50\%} \\ \hline
-100 & 0.9 & 25 & 50 & {\color[HTML]{006100} cbc} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} NoSol} & {\color[HTML]{9C6500} } & {\color[HTML]{9C6500} } & {\color[HTML]{9C0006} -} \\ \hline
+\textbf{\#N} &
+  \textbf{\%Ferr} &
+  \textbf{K} &
+  \textbf{Orders} &
+  {\color[HTML]{006100} \textbf{Solver}} &
+  {\color[HTML]{9C6500} \textbf{Sol\_avg}} &
+  {\color[HTML]{9C6500} \textbf{Sol\_std}} &
+  {\color[HTML]{9C6500} \textbf{LB\_avg}} &
+  {\color[HTML]{9C6500} \textbf{LB\_std}} &
+  {\color[HTML]{9C6500} \textbf{Time\_avg}} &
+  {\color[HTML]{9C0006} \textbf{Gap\_avg}} &
+  {\color[HTML]{9C0006} \textbf{Gap\_Std}} \\ \hline
+10 &
+  0,9 &
+  2 &
+  5 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 753,6} &
+  {\color[HTML]{9C6500} 164,4} &
+  {\color[HTML]{9C6500} 753,6} &
+  {\color[HTML]{9C6500} 164,4} &
+  {\color[HTML]{9C6500} 0s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,9 &
+  2 &
+  5 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 753,6} &
+  {\color[HTML]{9C6500} 164,4} &
+  {\color[HTML]{9C6500} 753,6} &
+  {\color[HTML]{9C6500} 164,4} &
+  {\color[HTML]{9C6500} 0,08s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,9 &
+  3 &
+  5 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 730} &
+  {\color[HTML]{9C6500} 161,3} &
+  {\color[HTML]{9C6500} 730} &
+  {\color[HTML]{9C6500} 161,3} &
+  {\color[HTML]{9C6500} 0s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+10 &
+  0,9 &
+  3 &
+  5 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 730} &
+  {\color[HTML]{9C6500} 161,3} &
+  {\color[HTML]{9C6500} 730} &
+  {\color[HTML]{9C6500} 161,3} &
+  {\color[HTML]{9C6500} 0,06s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  2 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 14584,3} &
+  {\color[HTML]{9C6500} 929,5} &
+  {\color[HTML]{9C6500} 14584,3} &
+  {\color[HTML]{9C6500} 929,5} &
+  {\color[HTML]{9C6500} 4,1s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  2 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 14584,3} &
+  {\color[HTML]{9C6500} 929,5} &
+  {\color[HTML]{9C6500} 14584,3} &
+  {\color[HTML]{9C6500} 929,5} &
+  {\color[HTML]{9C6500} 29,1s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  4 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 13825,3} &
+  {\color[HTML]{9C6500} 666,1} &
+  {\color[HTML]{9C6500} 13825,3} &
+  {\color[HTML]{9C6500} 666,1} &
+  {\color[HTML]{9C6500} 16,4s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  4 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 13825,3} &
+  {\color[HTML]{9C6500} 666,1} &
+  {\color[HTML]{9C6500} 13825,3} &
+  {\color[HTML]{9C6500} 666,1} &
+  {\color[HTML]{9C6500} 27,2s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  6 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 7,6s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  6 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 30s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  13 &
+  25 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 8s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+50 &
+  0,9 &
+  13 &
+  25 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 13814,6} &
+  {\color[HTML]{9C6500} 657,9} &
+  {\color[HTML]{9C6500} 27,6s} &
+  {\color[HTML]{9C0006} 0\%} &
+  {\color[HTML]{9C0006} 0\%} \\ \hline
+100 &
+  0,9 &
+  2 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 50513,3} &
+  {\color[HTML]{9C6500} 2112,1} &
+  {\color[HTML]{9C6500} 50135,3} &
+  {\color[HTML]{9C6500} 2265,4} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,7\%} &
+  {\color[HTML]{9C0006} 1,0\%} \\ \hline
+100 &
+  0,9 &
+  2 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,9 &
+  7 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 47699,3} &
+  {\color[HTML]{9C6500} 2044} &
+  {\color[HTML]{9C6500} 47627,3} &
+  {\color[HTML]{9C6500} 2117,9} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,15\%} &
+  {\color[HTML]{9C0006} 0,23\%} \\ \hline
+100 &
+  0,9 &
+  7 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,9 &
+  12 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 47699,3} &
+  {\color[HTML]{9C6500} 2044} &
+  {\color[HTML]{9C6500} 47627,3} &
+  {\color[HTML]{9C6500} 2117,9} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,15\%} &
+  {\color[HTML]{9C0006} 0,23\%} \\ \hline
+100 &
+  0,9 &
+  12 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
+100 &
+  0,9 &
+  25 &
+  50 &
+  {\color[HTML]{006100} glpk} &
+  {\color[HTML]{9C6500} 47699,3} &
+  {\color[HTML]{9C6500} 2044} &
+  {\color[HTML]{9C6500} 47627,3} &
+  {\color[HTML]{9C6500} 2117,9} &
+  {\color[HTML]{9C6500} /} &
+  {\color[HTML]{9C0006} 0,15\%} &
+  {\color[HTML]{9C0006} 0,23\%} \\ \hline
+100 &
+  0,9 &
+  25 &
+  50 &
+  {\color[HTML]{006100} cbc} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C6500} NoSol} &
+  {\color[HTML]{9C6500} } &
+  {\color[HTML]{9C0006} -} &
+  {\color[HTML]{9C0006} -} \\ \hline
 \end{tabular}
-\caption{\label{tab:perc09} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.9$}
+
+\caption{\label{tab:perc09} Risultati delle istanze con percentuale di attivazione ferrovie $= 0.9$ - media su 3 istanze per tipologia}
 \end{table}
 
 
@@ -395,31 +1129,108 @@ Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
 \begin{table}[htb]
-\scalebox{0.92}{
-\begin{tabular}{|l|l|l|l|
->{\columncolor[HTML]{C6EFCE}}l |
->{\columncolor[HTML]{FFEB9C}}l |
->{\columncolor[HTML]{FFEB9C}}l |
->{\columncolor[HTML]{FFC7CE}}l |
->{\columncolor[HTML]{FFC7CE}}l |
->{\columncolor[HTML]{FFEB9C}}l |
->{\columncolor[HTML]{FFC7CE}}l |}
-\hline
-Nodes & PercFerr & K & NOrder & {\color[HTML]{006100} Solver} & {\color[HTML]{9C6500} Solution} & {\color[HTML]{9C6500} LowerBound} & {\color[HTML]{9C0006} SolutionRelax} & {\color[HTML]{9C0006} NewLower} & Gap & {\color[HTML]{9C0006} NewGap} \\ \hline
-100 & 0.1 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 60239} & {\color[HTML]{9C6500} 59167} & {\color[HTML]{9C0006} 66078} & {\color[HTML]{9C0006} 59891} & 1.8\% & {\color[HTML]{9C0006} 0.6\%} \\ \hline
-100 & 0.1 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52563} & {\color[HTML]{9C6500} 50858} & {\color[HTML]{9C0006} 60090} & {\color[HTML]{9C0006} 51563} & 3.10\% & {\color[HTML]{9C0006} 1.9\%} \\ \hline
-100 & 0.1 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53101} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C0006} 60090} & {\color[HTML]{9C0006} 51563} & 4.10\% & {\color[HTML]{9C0006} 2.8\%} \\ \hline
-100 & 0.1 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 53283} & {\color[HTML]{9C6500} 50867} & {\color[HTML]{9C0006} 60090} & {\color[HTML]{9C0006} 51563} & 4.50\% & {\color[HTML]{9C0006} 3.2\%} \\ \hline
-100 & 0.5 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52700} & {\color[HTML]{9C6500} 52229} & {\color[HTML]{9C0006} 56962} & {\color[HTML]{9C0006} 52306} & 0.9\% & {\color[HTML]{9C0006} 0.7\%} \\ \hline
-100 & 0.5 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C0006} 56962} & {\color[HTML]{9C0006} 52306} & 1.30\% & {\color[HTML]{9C0006} 1.10\%} \\ \hline
-100 & 0.5 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 52925} & {\color[HTML]{9C6500} 52233} & {\color[HTML]{9C0006} 56962} & {\color[HTML]{9C0006} 52306} & 1.30\% & {\color[HTML]{9C0006} 1.10\%} \\ \hline
-100 & 0.9 & 2 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 50915} & {\color[HTML]{9C6500} 46290} & {\color[HTML]{9C0006} 55225} & {\color[HTML]{9C0006} 49081} & 4.1\% & {\color[HTML]{9C0006} 3.6\%} \\ \hline
-100 & 0.9 & 7 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
-100 & 0.9 & 12 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
-100 & 0.9 & 25 & 50 & {\color[HTML]{006100} glpk} & {\color[HTML]{9C6500} 45635} & {\color[HTML]{9C6500} 45329} & {\color[HTML]{9C0006} 49092} & {\color[HTML]{9C0006} 45482} & 0.50\% & {\color[HTML]{9C0006} 0.3\%} \\ \hline
+\begin{tabular}{
+>{\columncolor[HTML]{FFFFFF}}l 
+>{\columncolor[HTML]{FFFFFF}}l 
+>{\columncolor[HTML]{FFFFFF}}l 
+>{\columncolor[HTML]{FFFFFF}}l 
+>{\columncolor[HTML]{FFFFFF}}l 
+>{\columncolor[HTML]{FFFFFF}}l 
+>{\columncolor[HTML]{FFFFFF}}l }
+{\color[HTML]{000000} \textbf{ISTANZA}} &
+  {\color[HTML]{000000} \textbf{LB}} &
+  {\color[HTML]{000000} \textbf{UB}} &
+  {\color[HTML]{000000} \textbf{GAP}} &
+  {\color[HTML]{000000} \textbf{LBLagrange}} &
+  {\color[HTML]{000000} \textbf{GAP{[}Lagrange{]}}} &
+  {\color[HTML]{000000} \textbf{TimeLagrange}} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_50\_01\_4\_3.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}18076} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}18237} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.883} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}18164} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.4} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}3.2s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_01\_2.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}59180} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}60244} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}1.766} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}60336} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.153} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}243.3s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_01\_2\_2.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}59680} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}63644} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}6.228} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}64954} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}2.058} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}412.9s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_05\_7.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}52252} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}52700} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.85} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}52306} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.748} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}117.7s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_05\_7\_3.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}50191} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}50584} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.777} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}50373} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.417} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}119s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_01\_7.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}50936} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}52563} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}3.095} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}51563} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}1.902} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}109.7s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_01\_7\_2.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}51078} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}52167} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}2.088} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}52026} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.27} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}106.1s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_01\_7\_3.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}54804} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}55534} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}1.315} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}55325} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.376} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}112.5s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_09\_2.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}48870} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}50004} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}2.268} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}49081} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}1.846} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}143.8s} \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{FFFFFF}inst\_100\_09\_7.cmpl} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}45419} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}45635} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.473} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}45482} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}0.335} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{FFFFFF}131.8s} \\ \hline
 \end{tabular}
-}
 \caption{\label{tab:lagrange} In giallo la soluzione trovata dal solutore nel limite dei 300 secondi. In rosso il nuovo gap calcolato utilizzando, come nuovo lowerbound, la soluzione del problema lagrangeano all'interno della funzione obiettivo del problema originale}
 \end{table}
 
