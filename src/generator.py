@@ -66,7 +66,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         type=str,
-        default='./' # percentuale attivazione ferrovie
+        default='./' # path dove salvare i file generati
     )
 
     args = parser.parse_args()
