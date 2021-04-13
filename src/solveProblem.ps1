@@ -3,11 +3,11 @@ $culture = [cultureinfo]::GetCultureInfo('en-US')
 $style = [Globalization.NumberStyles]::Float
 
 $files = $args[0]
-##$_gap_thr = $args[1]
-##$gap_thr = [decimal]$_gap_thr
-$gap_thr = 0.8
+$_gap_thr = $args[1]
+$gap_thr = [decimal]$_gap_thr
+##$gap_thr = 0.8
 
-$colgenscript = $args[1]
+$colgenscript = $args[2]
 
 $sol_list = [System.Collections.ArrayList]@()
 $mem_list = [System.Collections.ArrayList]@()
