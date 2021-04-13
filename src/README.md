@@ -57,15 +57,15 @@ L'output dello script è la scrittura a terminale della soluzione intera ottenut
 
 ## Script per l'esecuzione condizionale del solver
 Lo script powershell [solver](solverProblem.ps1) ha due argomenti posizionali:
--   arg1 : path al problema .cmpl
+-   arg1 : path alla cartella dove risiede il problema .cmpl da analizzare
 -   arg2 : threshold per esecuzione condizionale dell'istanza ridotta
 -   arg3 : path al generatore di istanza modificata per column generation - [colgenTest](colgenTest.py)
 \
-Lo script nel caso in cui il gap del problema originale sia >= 0.8, creerà un istanza ridotta del problema e risolverà quella.
+Lo script nel caso in cui il gap del problema originale sia >= di arg2, creerà un istanza ridotta del problema e risolverà quella.
 \
 Infine, verrà generato un .csv contenente i risultati del problema originale e di quello ridotto.
 \
 Per eseguire il test su una singola istanza è necessario lanciare lo script nella maniera seguente, dopo essersi posizionati nella cartella /src:
 ```console
-user@pc:~$ ./solveProblem.ps1 ../dati/test/inst_50_01_4_3.cmpl 0.8 colgenTest.py
+user@pc:~$ ./solveProblem.ps1 ../dati/test/ 0.8 colgenTest.py
 ```
