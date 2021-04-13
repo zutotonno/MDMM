@@ -59,6 +59,7 @@ L'output dello script è la scrittura a terminale della soluzione intera ottenut
 Lo script powershell [solver](solverProblem.ps1) ha due argomenti posizionali:
 -   -arg1 : path al problema .cmpl
 -   -arg2 : path al generatore di istanza modificata per column generation - [colgenTest](colgenTest.py)
+\
 Lo script nel caso in cui il gap del problema originale sia >= 0.8, creerà un istanza ridotta del problema e risolverà quella.
 \
 Infine, verrà generato un .csv contenente i risultati del problema originale e di quello ridotto.
