@@ -237,6 +237,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     how = args.how
     all_inst_path = args.p
+    print(all_inst_path)
     for inst_path in all_inst_path:
         b_array, valid_b = read_problem(inst_path, nagg=None)
         d_array = d_problem(inst_path)
@@ -264,4 +265,4 @@ if __name__ == "__main__":
             c_array = c_problem(inst_path, b_array)
             u_array = u_problem(inst_path, b_array)
             generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 20)
-    os.remove(all_inst_path)
+    os.remove(all_inst_path[0])
