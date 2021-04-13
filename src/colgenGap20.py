@@ -210,7 +210,7 @@ def cost_sort(narray, odarray, carray, how='S'):
                 costo = carray[n,od,0] + carray[od,n,0]
             elif how == 'R':
                 costo = carray[n,od,1] + carray[od,n,1]
-            elif how == 'B':
+            elif how == 'M':
                 costo = carray[n,od,1] + carray[od,n,1] + carray[n,od,0] + carray[od,n,0]
             cn[n]+=costo
     return sorted(cn.items(), key=lambda x: x[1])
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--how",
         type=str,
-        help='S for street, R for railways, B for both'
+        help='S for street, R for railways, M for both'
     )
 
 

@@ -2,7 +2,7 @@ import argparse
 import xml.etree.ElementTree as ET
 import numpy as np
 from ast import literal_eval as make_tuple
-
+import os
 
 
 def d_problem(problem_instance):
@@ -250,35 +250,18 @@ if __name__ == "__main__":
         if how != "M":
             del_array = [c[0] for c in cost_sort(del_array, b_array, tot_cost,how=how)]
 
-            b_array, valid_b = read_problem(inst_path, nagg = del_array[:15])
-            c_array = c_problem(inst_path, b_array)
-            u_array = u_problem(inst_path, b_array)
-            generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 15)
-
             b_array, valid_b = read_problem(inst_path, nagg = del_array[:20])
             c_array = c_problem(inst_path, b_array)
             u_array = u_problem(inst_path, b_array)
             generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 20)
-
-            b_array, valid_b = read_problem(inst_path, nagg = del_array[:25])
-            c_array = c_problem(inst_path, b_array)
-            u_array = u_problem(inst_path, b_array)
-            generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 25)
         else:
             del_array_S = [c[0] for c in cost_sort(del_array, b_array, tot_cost,how='S')]
             del_array_R = [c[0] for c in cost_sort(del_array, b_array, tot_cost,how='R')]
 
-            b_array, valid_b = read_problem(inst_path, nagg = list(set(del_array_S[:5] + del_array_R[:10])))
-            c_array = c_problem(inst_path, b_array)
-            u_array = u_problem(inst_path, b_array)
-            generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 15)
+        
 
             b_array, valid_b = read_problem(inst_path, nagg = list(set(del_array_S[:5] + del_array_R[:15])))
             c_array = c_problem(inst_path, b_array)
             u_array = u_problem(inst_path, b_array)
             generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 20)
-
-            b_array, valid_b = read_problem(inst_path, nagg = list(set(del_array_S[:5] + del_array_R[:25])))
-            c_array = c_problem(inst_path, b_array)
-            u_array = u_problem(inst_path, b_array)
-            generate_newinstance(k, d_array, c_array, u_array, valid_b, inst_path, 25)
+    os.remove(all_inst_path)
