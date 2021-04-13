@@ -5,7 +5,6 @@ $style = [Globalization.NumberStyles]::Float
 $dir = $args[0]
 $_gap_thr = $args[1]
 $gap_thr = [decimal]$_gap_thr
-$env = $args[2]
 $colgenscript = $args[3]
 
 $sol_list = [System.Collections.ArrayList]@()
@@ -55,7 +54,6 @@ if ($current_gap >= $gap_thr){
 	
 	Copy-Item -Path $current_inst -Destination $colgenpath
 	
-	conda activate $env
 	python $colgenscript -p $current_inst -how M
 		
 	
